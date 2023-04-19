@@ -1,0 +1,32 @@
+plugins {
+    id 'java-library'
+}
+
+ext {
+	javaVersion = '17'
+	
+	springVersion = '6.0.8'
+	
+	mapStructVersion = '1.5.4.Final'
+	
+	lombokVersion = '1.18.26'
+		
+	jUnitVersion = '5.9.2'
+}
+
+group = 'ru.clevertec.knyazev'
+version = '1.0'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+    	languageVersion.set(JavaLanguageVersion.of("$javaVersion"))
+    }
+}

@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'ru.clevertec.knyazev'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	implementation project(":entity")
+	implementation "org.springframework:spring-context:$springVersion"
+	
+    testImplementation "org.junit.jupiter:junit-jupiter:$jUnitVersion"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
