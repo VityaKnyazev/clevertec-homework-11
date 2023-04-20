@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
 }
 
-group = 'ru.clevertec.knyazev'
+group = 'ru.clevertec.ecl.knyazev'
 version = '0.0.1'
 
 repositories {
@@ -10,10 +10,6 @@ repositories {
 }
 
 dependencies {
-
-    implementation "org.mapstruct:mapstruct:$mapStructVersion"
-    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
-
 	compileOnly "org.projectlombok:lombok:$lombokVersion"
 	annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 

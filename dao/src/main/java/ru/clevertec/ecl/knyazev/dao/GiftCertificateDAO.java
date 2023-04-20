@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev;
+package ru.clevertec.ecl.knyazev.dao;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +48,14 @@ public interface GiftCertificateDAO {
 	 */
 	List<GiftCertificate> getAllGiftCertificates(Integer page);
 	
+	/**
+	 * 
+	 * Get all gift certificates by tag id.
+	 * 
+	 * @param tagId tag id for searching.
+	 * @return List<GiftCertificate> gift certificates by given tag id or empty list if nothing found.
+	 */
+	List<GiftCertificate> getAllGiftCertificatesByTagId(Long tagId);	
 	
 	/**
 	 * 

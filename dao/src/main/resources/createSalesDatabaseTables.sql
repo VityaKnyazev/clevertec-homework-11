@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS gift_certificate (
+id BIGSERIAL NOT NULL,
+name CHARACTER VARYING(25) NOT NULL,
+description CHARACTER VARYING(50) NOT NULL,
+price NUMERIC(11, 2) NOT NULL,
+duration date NOT NULL,
+create_date TIMESTAMPTZ NOT NULL,
+last_update_date TIMESTAMPTZ,
+
+PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS tag (
+id BIGSERIAL NOT NULL,
+name CHARACTER VARYING(30) NOT NULL,
+
+PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS gift_certificate_tag (
+gift_certificate_id BIGSERIAL NOT NULL,
+tag_id BIGSERIAL NOT NULL,
+
+PRIMARY KEY(gift_certificate_id, tag_id),
+
+CONSTRAINT fk_gift_certificate
+FOREIGN KEY (gift_certificate_id)
+REFERENCES gift_certificate (id)
+ON DELETE NO ACTION ON UPDATE NO ACTION,
+
+CONSTRAINT fk_tag
+FOREIGN KEY (tag_id)
+REFERENCES tag (id)
+ON DELETE NO ACTION ON UPDATE NO ACTION
+);

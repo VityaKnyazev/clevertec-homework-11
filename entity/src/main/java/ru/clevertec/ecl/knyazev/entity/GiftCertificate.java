@@ -12,7 +12,7 @@ import lombok.Data;
 @Builder
 public class GiftCertificate {
 	private Long id;
-	
+
 	private String name;
 	
 	private String description;

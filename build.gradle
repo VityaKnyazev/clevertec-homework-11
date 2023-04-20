@@ -5,17 +5,28 @@ plugins {
 ext {
 	javaVersion = '17'
 	
+	postgresqlConVersion = '42.6.0'
+	hikariCPVersion = '5.0.1'
+	
 	springVersion = '6.0.8'
+	
+	snakeYamlVersion = '2.0'
 	
 	mapStructVersion = '1.5.4.Final'
 	
 	lombokVersion = '1.18.26'
+	
+	slf4jApiVersion = '2.0.6'
+	logbackVersion = '1.4.5'
+	
+	liquibaseVersion = '4.21.1'
+	piocliVersion = '4.7.3'
 		
 	jUnitVersion = '5.9.2'
 }
 
-group = 'ru.clevertec.knyazev'
-version = '1.0'
+group = 'ru.clevertec.ecl.knyazev'
+version = '0.0.1'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'

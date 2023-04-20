@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
 }
 
-group = 'ru.clevertec.knyazev'
+group = 'ru.clevertec.ecl.knyazev'
 version = '0.0.1'
 
 repositories {
@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+	
+
     testImplementation "org.junit.jupiter:junit-jupiter:$jUnitVersion"
 }
 

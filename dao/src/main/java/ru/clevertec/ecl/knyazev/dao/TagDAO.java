@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev;
+package ru.clevertec.ecl.knyazev.dao;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +11,34 @@ import ru.clevertec.ecl.knyazev.entity.Tag;
  *
  */
 public interface TagDAO {
+	
+	/**
+	 * 
+	 * Get Optional<Tag> from database on giving name.
+	 * 
+	 * @param String name for searching tag in database.
+	 * @return Optional<Tag> tag. If tag not exists in database - Optional empty.
+	 */
+	Optional<Tag> getTagByName(String name);
+	
+	/**
+	 * 
+	 * Get Optional<Tag> from database on giving part of name.
+	 * 
+	 * @param String part of name for searching tag in database.
+	 * @return Optional<Tag> tag. If tag not exists in database - Optional empty.
+	 */
+	Optional<Tag> getTagByPartOfName(String name);
+	
+	/**
+	 * 
+	 * Get Optional<Tag> from database on giving part of description.
+	 * 
+	 * @param String part of description for searching tag in database.
+	 * @return Optional<Tag> tag. If tag not exists in database - Optional empty.
+	 */
+	Optional<Tag> getTagByPartOfDescription(String description);
+	
 	/**
 	 * 
 	 * Get Optional<Tag> from database on giving id.
@@ -47,6 +75,16 @@ public interface TagDAO {
 	 * @return List<Tag> tags on given Integer page from database or empty list.
 	 */
 	List<Tag> getAllTags(Integer page);
+	
+	
+	/**
+	 * 
+	 * Get all tags by gift certificate id.
+	 * 
+	 * @param giftCertificateId gift certificate id for searching.
+	 * @return List<Tag> tags by given gift certificate id or empty list if nothing found.
+	 */
+	List<Tag> getAllTagsByGiftCertificateId(Long giftCertificateId);
 	
 	
 	/**
