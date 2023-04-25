@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.parser;
+package ru.clevertec.ecl.knyazev.dao.parser;
 
 import java.io.InputStream;
 import java.util.Map;

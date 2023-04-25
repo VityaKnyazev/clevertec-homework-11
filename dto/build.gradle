@@ -13,10 +13,17 @@ repositories {
 }
 
 dependencies {
-    implementation "org.hibernate.orm:hibernate-core:$hibernateVersion"
-
+	implementation project(":entity")
+	
+	implementation "org.springframework:spring-context:$springVersion"
+	
+	implementation "org.mapstruct:mapstruct:$mapStructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
+	
 	compileOnly "org.projectlombok:lombok:$lombokVersion"
 	annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+	
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:$lombokMapstructBindingVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter:$jUnitVersion"
 }

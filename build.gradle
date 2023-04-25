@@ -8,6 +8,8 @@ ext {
 	postgresqlConVersion = '42.6.0'
 	hikariCPVersion = '5.0.1'
 	
+	hibernateVersion = '6.1.7.Final'
+	
 	springVersion = '6.0.8'
 	
 	snakeYamlVersion = '2.0'
@@ -16,6 +18,8 @@ ext {
 	
 	lombokVersion = '1.18.26'
 	
+	lombokMapstructBindingVersion = '0.2.0'
+	
 	slf4jApiVersion = '2.0.6'
 	logbackVersion = '1.4.5'
 	
@@ -23,6 +27,8 @@ ext {
 	piocliVersion = '4.7.3'
 		
 	jUnitVersion = '5.9.2'
+	assertJVersion = '3.24.2'
+	testcontainersPostgresVersion = '1.17.6'
 }
 
 group = 'ru.clevertec.ecl.knyazev'

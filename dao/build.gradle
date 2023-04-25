@@ -6,6 +6,9 @@ plugins {
 group = 'ru.clevertec.ecl.knyazev'
 version = '0.0.1'
 
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 repositories {
     mavenCentral()
 }
@@ -16,8 +19,9 @@ dependencies {
 	implementation "org.postgresql:postgresql:$postgresqlConVersion"
 	implementation "com.zaxxer:HikariCP:$hikariCPVersion"
 	
+	implementation "org.hibernate.orm:hibernate-core:$hibernateVersion"
+	
 	implementation "org.springframework:spring-context:$springVersion"
-	implementation "org.springframework:spring-jdbc:$springVersion"
 	
 	implementation "org.slf4j:slf4j-api:$slf4jApiVersion"
 	implementation "ch.qos.logback:logback-classic:$logbackVersion"
@@ -28,7 +32,16 @@ dependencies {
 	
 	implementation "org.yaml:snakeyaml:$snakeYamlVersion"	
 		
-    testImplementation "org.junit.jupiter:junit-jupiter:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$jUnitVersion"
+    testImplementation"org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.springframework:spring-test:$springVersion"
+   
+    
+    testImplementation "org.testcontainers:postgresql:$testcontainersPostgresVersion"
+    testImplementation "org.liquibase:liquibase-core:$liquibaseVersion"
+    
 }
 
 liquibase {
