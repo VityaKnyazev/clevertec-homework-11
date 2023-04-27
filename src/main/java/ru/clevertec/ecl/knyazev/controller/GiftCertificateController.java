@@ -66,13 +66,13 @@ public class GiftCertificateController {
 
 	@GetMapping("/certificates/{id}")
 	public ResponseEntity<?> getGiftCertificate(
-			@PathVariable @Min(value = 1L, message = "Gift certificate id must be greater than or equals to 1") Long id) {
-		Optional<GiftCertificate> giftCertificate = giftCertificateService.show(id);
+			@PathVariable @Min(value = 1, message = "Gift certificate id must be greater than or equals to 1") Long id) {
+		Optional<GiftCertificate> giftCertificateWrap = giftCertificateService.show(id);
 
-		if (giftCertificate.isEmpty()) {
+		if (giftCertificateWrap.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nothing found");
 		} else {
-			return ResponseEntity.ok().body(giftCertificateMapperImpl.toDTO(giftCertificate.get()));
+			return ResponseEntity.ok().body(giftCertificateMapperImpl.toDTO(giftCertificateWrap.get()));
 		}
 	}
 
@@ -99,7 +99,7 @@ public class GiftCertificateController {
 		}
 	}
 
-	@DeleteMapping("/certificates/{id}")
+	@DeleteMapping("/certificates")
 	public ResponseEntity<?> removeGiftCertificate(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
 
 		try {
