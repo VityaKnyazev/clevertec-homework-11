@@ -3,12 +3,12 @@ package ru.clevertec.ecl.knyazev.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.clevertec.ecl.knyazev.dao.DAO;
 import ru.clevertec.ecl.knyazev.entity.Tag;
+import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @Service
 public class TagService implements SimpleService<Tag> {
@@ -65,7 +65,7 @@ public class TagService implements SimpleService<Tag> {
 	}
 
 	@Override
-	public void remove(Tag tag) {
+	public void remove(Tag tag) throws ServiceException {
 		Boolean result = tagDAOJPA.delete(tag);
 		
 		if (!result) {

@@ -1,0 +1,25 @@
+package ru.clevertec.ecl.knyazev.controller;
+
+import java.util.Date;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+@Controller
+public class ErrorsController {
+	@GetMapping("/errors")
+	public ResponseEntity<ErrorMessage> handleError(HttpServletRequest request) throws Exception {
+		Integer status = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
+		
+		if (status == 404) {
+			ErrorMessage message = new ErrorMessage(status, new Date(),"Not Found");
+			return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_FOUND);
+		}
+		
+		throw new Exception("UNKNOWN_ERROR");
+	}
+}

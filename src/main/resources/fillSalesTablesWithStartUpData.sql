@@ -5,7 +5,7 @@ Insert Into gift_certificate (name, description, price, duration, create_date) V
 Insert Into gift_certificate (name, description, price, duration, create_date) VALUES('Сад и огород', 'На товары для участков и дач', 200.000, '2023-09-20', current_timestamp);
 Insert Into gift_certificate (name, description, price, duration, create_date) VALUES('Ремонт', 'На товары для ремонта помещений', 100.000, '2023-08-24', current_timestamp);
 
-Insert Into tag (name) VALUES('Любимойй жене');
+Insert Into tag (name) VALUES('Любимой жене');
 Insert Into tag (name) VALUES('Дорогому мужу');
 Insert Into tag (name) VALUES('Доче');
 Insert Into tag (name) VALUES('Крестнице');

@@ -9,10 +9,12 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.PersistenceException;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 
+@Repository
 public class TagDAOJPA implements DAO<Tag>{
 	private static final Integer PAGE_EL_LIMIT = 20;
 

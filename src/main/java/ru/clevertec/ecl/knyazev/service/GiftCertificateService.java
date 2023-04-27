@@ -3,12 +3,12 @@ package ru.clevertec.ecl.knyazev.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.clevertec.ecl.knyazev.dao.DAO;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
+import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @Service
 public class GiftCertificateService implements SimpleService<GiftCertificate> {
@@ -65,7 +65,7 @@ public class GiftCertificateService implements SimpleService<GiftCertificate> {
 	}
 
 	@Override
-	public void remove(GiftCertificate giftCertificate) {
+	public void remove(GiftCertificate giftCertificate) throws ServiceException {
 		Boolean result = giftCertificateDAOJPA.delete(giftCertificate);
 		
 		if (!result) {
