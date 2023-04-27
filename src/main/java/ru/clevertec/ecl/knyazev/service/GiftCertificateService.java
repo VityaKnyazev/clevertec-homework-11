@@ -6,19 +6,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.clevertec.ecl.knyazev.dao.DAO;
+import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAOJPA;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @Service
 public class GiftCertificateService implements SimpleService<GiftCertificate> {
-	private DAO<GiftCertificate> giftCertificateDAOJPA;
+	private GiftCertificateDAOJPA giftCertificateDAOJPA;
 
 	public GiftCertificateService() {
 	}
 
 	@Autowired
-	public GiftCertificateService(DAO<GiftCertificate> giftCertificateDAOJPA) {
+	public GiftCertificateService(GiftCertificateDAOJPA giftCertificateDAOJPA) {
 		this.giftCertificateDAOJPA = giftCertificateDAOJPA;
 	}
 

@@ -17,7 +17,7 @@ import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 
 @Repository
-public class GiftCertificateDAOJPA implements DAO<GiftCertificate> {
+public class GiftCertificateDAOJPA implements DAO<GiftCertificate>, GiftCertificateDAO {
 	private static final Integer PAGE_EL_LIMIT = 20;
 
 	private static final Logger logger = LoggerFactory.getLogger(GiftCertificateDAOJPA.class);
@@ -44,7 +44,7 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate> {
 
 				if (giftCertificateDB != null) {
 					giftCertificateDB.getTags().size();
-					
+
 					session.getTransaction().commit();
 
 					giftCertificateWrap = Optional.of(giftCertificateDB);
@@ -118,6 +118,64 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate> {
 	}
 
 	@Override
+	public List<GiftCertificate> getByTagName(String tagName) {
+		List<GiftCertificate> giftCertificates = new ArrayList<>();
+
+		try (Session session = sessionFactory.openSession()) {
+			session.getTransaction().begin();
+
+			giftCertificates = session
+					.createQuery("SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE t.name = ?1",
+							GiftCertificate.class)
+					.setParameter(1, tagName).getResultList();
+
+			if (!giftCertificates.isEmpty()) {
+				session.getTransaction().commit();
+			} else {
+				session.getTransaction().rollback();
+				logger.error("No gift certificates were found with given tag name={}", tagName);
+			}
+		}
+
+		return giftCertificates;
+	}
+
+	@Override
+	public List<GiftCertificate> getByTagPartFieldValue(String fieldName, String partFieldValue) {
+		List<GiftCertificate> giftCertificates = new ArrayList<>();
+
+		if (partFieldValue != null && !partFieldValue.isBlank()) {
+			partFieldValue = "%" + partFieldValue + "%";
+		} else {
+			return giftCertificates;
+		}
+
+		Session session = sessionFactory.openSession();
+		try {
+			session.getTransaction().begin();
+
+			giftCertificates = session.createQuery(
+					"SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE t." + fieldName + " LIKE ?1",
+					GiftCertificate.class).setParameter(1, partFieldValue).getResultList();
+
+			if (!giftCertificates.isEmpty()) {
+				session.getTransaction().commit();
+			} else {
+				session.getTransaction().rollback();
+				logger.error("No gift certificates were found with given part of tag field value={} on field={}",
+						partFieldValue, fieldName);
+			}
+		} catch (Exception e) {
+			session.getTransaction().rollback();
+			logger.error("Error in field name={}. {}", fieldName, e.getMessage(), e);
+		} finally {
+			session.close();
+		}
+
+		return giftCertificates;
+	}
+
+	@Override
 	public Optional<GiftCertificate> save(GiftCertificate giftCertificate) {
 		Optional<GiftCertificate> giftCertificateWrap = Optional.empty();
 
@@ -178,14 +236,13 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate> {
 						if (tag.getId() != null) {
 							session.refresh(tag);
 						}
-					});							
-					
+					});
+
 					List<Tag> dbTags = giftCertificateDB.getTags();
-					
-					
+
 					if (dbTags == null) {
 						giftCertificateDB.setTags(tags);
-					} else {						
+					} else {
 						tags.stream().forEach(tag -> {
 							if (!dbTags.contains(tag)) {
 								dbTags.add(tag);
@@ -193,7 +250,7 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate> {
 						});
 						giftCertificateDB.setTags(dbTags);
 					}
-					
+
 					if (giftCertificate.getName() != null) {
 						giftCertificateDB.setName(giftCertificate.getName());
 					}
@@ -213,7 +270,7 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate> {
 					giftCertificateDB.setLastUpdate(LocalDateTime.now());
 
 					session.merge(giftCertificateDB);
-					
+
 					session.getTransaction().commit();
 
 					giftCertificateWrap = Optional.of(giftCertificateDB);

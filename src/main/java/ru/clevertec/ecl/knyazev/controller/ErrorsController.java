@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
+import ru.clevertec.ecl.knyazev.controller.ExceptionController.ErrorMessage;
 
 @Controller
 public class ErrorsController {
@@ -16,7 +17,7 @@ public class ErrorsController {
 		Integer status = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
 		
 		if (status == 404) {
-			ErrorMessage message = new ErrorMessage(status, new Date(),"Not Found");
+			ErrorMessage message = new ExceptionController.ErrorMessage(status, new Date(),"Not Found");
 			return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_FOUND);
 		}
 		

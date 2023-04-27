@@ -33,7 +33,7 @@ import ru.clevertec.ecl.knyazev.testconfig.TestContainersConfig;
 
 public class GiftCertificateTest {
 	@Autowired
-	DAO<GiftCertificate> giftCertificateDAOJPA;
+	GiftCertificateDAOJPA giftCertificateDAOJPA;
 
 	@Test
 	public void checkGetByIdShouldReturnGiftCertificate() {
@@ -100,6 +100,35 @@ public class GiftCertificateTest {
 		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getAll(1);
 		
 		assertThat(actualGiftCertificates).isNotEmpty();
+	}
+	
+	@Test
+	public void checkGetByTagNameShouldReturnGiftCertificatesWithTags() {
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagName("Доче");
+		
+		assertThat(actualGiftCertificates).isNotEmpty();
+	}
+	
+	@Test
+	public void checkGetByTagNameShouldReturnEmptyListOnInvalidTagName() {
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagName("Дону");
+		
+		assertThat(actualGiftCertificates).isEmpty();
+	}
+	
+	@Test
+	public void checkGetByTagPartFieldValueShouldReturnGiftCertificatesWithTags() {
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagPartFieldValue("name", "оч");
+		
+		assertThat(actualGiftCertificates).isNotEmpty();
+	}
+	
+	@ParameterizedTest
+	@MethodSource("getInvalidFieldsNamesAndValues")
+	public void checkGetByTagPartFieldValueShouldReturnEmptyList(String fieldName, String fieldPartValue) {
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagPartFieldValue(fieldName, fieldPartValue);
+		
+		assertThat(actualGiftCertificates).isEmpty();
 	}
 	
 	@Test
@@ -336,5 +365,17 @@ Boolean result = giftCertificateDAOJPA.delete(invalidGiftCertificate);
 						 .duration(Date.valueOf("2023-04-08"))
 					     .build())
 			);		
+	}
+	
+	private static Stream<Arguments> getInvalidFieldsNamesAndValues() {
+		return Stream.of(
+				Arguments.of(null, "оч"),
+				Arguments.of("", "оч"),
+				Arguments.of("task", "оч"),
+				Arguments.of("name", ""),
+				Arguments.of("name", "  "),
+				Arguments.of("name", "я")
+				);
+				
 	}
 }

@@ -17,14 +17,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.clevertec.ecl.knyazev.dao.DAO;
+import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAOJPA;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
 public class GiftCertificateServiceTest {
 	@Mock
-	private DAO<GiftCertificate> giftCertificateDAOJPAMock;
+	private GiftCertificateDAOJPA giftCertificateDAOJPAMock;
 	
 	@InjectMocks
 	private GiftCertificateService giftCertificateService;

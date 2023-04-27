@@ -65,20 +65,20 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 		ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage());
 		return handleExceptionInternal(ex, message, headers, status, request);
 	}
-}
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class ErrorMessage {
-	private static final String UNKNOWN_ERROR = "UNKNOWN ERROR";
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class ErrorMessage {
+		private static final String UNKNOWN_ERROR = "UNKNOWN ERROR";
 
-	private int statusCode;
-	private Date timestamp;
-	private String message;
+		private int statusCode;
+		private Date timestamp;
+		private String message;
 
-	public static final String defaultError() {
-		return UNKNOWN_ERROR;
+		public static final String defaultError() {
+			return UNKNOWN_ERROR;
+		}
+
 	}
-
 }
