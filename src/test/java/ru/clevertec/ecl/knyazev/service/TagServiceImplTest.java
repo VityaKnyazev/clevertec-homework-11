@@ -15,22 +15,22 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.clevertec.ecl.knyazev.dao.DAO;
+import ru.clevertec.ecl.knyazev.dao.TagDAO;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
-public class TagServiceTest {
+public class TagServiceImplTest {
 	@Mock
-	private DAO<Tag> tagDAOJPAMock;
+	private TagDAO tagDAOJPAImplMock;
 	
 	@InjectMocks
-	private TagService tagService;
+	private TagServiceImpl tagServiceImpl;
 	
 	@Test
 	public void checkShowShouldReturnOptionalTag() {
 		
-		Mockito.when(tagDAOJPAMock.getById(Mockito.longThat(id -> id != null && id > 0L))).thenAnswer(invocation -> {
+		Mockito.when(tagDAOJPAImplMock.getById(Mockito.longThat(id -> id != null && id > 0L))).thenAnswer(invocation -> {
 			Long inputId = invocation.getArgument(0);
 			
 			return Optional.of(Tag.builder()
@@ -41,7 +41,7 @@ public class TagServiceTest {
 		
 		Long inputId = 3L;
 		
-		Optional<Tag> tagWrap = tagService.show(inputId);
+		Optional<Tag> tagWrap = tagServiceImpl.show(inputId);
 		
 		assertAll(
 				() -> assertThat(tagWrap).isNotEmpty(),
@@ -53,7 +53,7 @@ public class TagServiceTest {
 	@Test
 	public void checkShowAllShouldReturnTags() {
 		
-		Mockito.when(tagDAOJPAMock.getAll()).thenAnswer(invocation -> {
+		Mockito.when(tagDAOJPAImplMock.getAll()).thenAnswer(invocation -> {
 				
 			return List.of(Tag.builder()
 						   .id(1L)
@@ -65,7 +65,7 @@ public class TagServiceTest {
 					   .build());
 		});
 				
-		List<Tag> tags = tagService.showAll();
+		List<Tag> tags = tagServiceImpl.showAll();
 		
 		assertAll(
 				() -> assertThat(tags).isNotEmpty(),
@@ -86,13 +86,13 @@ public class TagServiceTest {
 				   .name("Брату")
 				   .build());
 		
-		Mockito.when(tagDAOJPAMock.getAll(Mockito.intThat(page -> page != null && page > 0), 
+		Mockito.when(tagDAOJPAImplMock.getAll(Mockito.intThat(page -> page != null && page > 0), 
 				Mockito.intThat(pageS -> pageS != null && pageS > 0))).thenReturn(tags);
 				
 		Integer inputPage = 1;
 		Integer inputPageSize = 2;
 		
-		List<Tag> actualTags = tagService.showAll(inputPage, inputPageSize);
+		List<Tag> actualTags = tagServiceImpl.showAll(inputPage, inputPageSize);
 		
 		assertAll(
 					() -> assertThat(actualTags).isNotEmpty(),
@@ -113,12 +113,12 @@ public class TagServiceTest {
 			   .name("Брату")
 			   .build());
 		
-		Mockito.when(tagDAOJPAMock.getAll(Mockito.intThat(page -> page != null && page > 0)))
+		Mockito.when(tagDAOJPAImplMock.getAll(Mockito.intThat(page -> page != null && page > 0)))
 											  .thenReturn(tags);
 				
 		Integer inputPage = 1;
 		
-		List<Tag> actualTags = tagService.showAll(inputPage);
+		List<Tag> actualTags = tagServiceImpl.showAll(inputPage);
 		
 		assertAll(
 					() -> assertThat(actualTags).isNotEmpty(),
@@ -134,10 +134,10 @@ public class TagServiceTest {
 										  .name("Подруге")
 										  .build());
 		
-		Mockito.when(tagDAOJPAMock.save(Mockito.any(Tag.class))).thenReturn(tagWrap);
+		Mockito.when(tagDAOJPAImplMock.save(Mockito.any(Tag.class))).thenReturn(tagWrap);
 		
 		Tag inputTag = Tag.builder().name("Подруге").build();
-		Tag actualTag = tagService.add(inputTag);
+		Tag actualTag = tagServiceImpl.add(inputTag);
 		
 		assertAll(
 				() -> assertThat(actualTag.getId()).isEqualTo(1L),
@@ -147,16 +147,16 @@ public class TagServiceTest {
 	
 	@Test
 	public void checkAddShouldThrowServiceExceptionOnFailedSaving() {
-		Mockito.when(tagDAOJPAMock.save(Mockito.any(Tag.class))).thenReturn(Optional.empty());
+		Mockito.when(tagDAOJPAImplMock.save(Mockito.any(Tag.class))).thenReturn(Optional.empty());
 		
 		Tag invalidTag = Tag.builder().id(1L).build();
 		
-		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> tagService.add(invalidTag));
+		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> tagServiceImpl.add(invalidTag));
 	}
 	
 	@Test
 	public void checkChangeShoulReturnChangedCertificate() throws ServiceException {		
-		Mockito.when(tagDAOJPAMock.update(Mockito.any(Tag.class)))
+		Mockito.when(tagDAOJPAImplMock.update(Mockito.any(Tag.class)))
 		       .thenAnswer(invocation -> Optional.of(invocation.getArgument(0)));
 		
 		Tag inputTag = Tag.builder()
@@ -164,7 +164,7 @@ public class TagServiceTest {
 						  .name("Подруге")
 						  .build();
 		
-		Tag actualTag = tagService.change(inputTag);
+		Tag actualTag = tagServiceImpl.change(inputTag);
 		
 		assertAll(
 				() -> assertThat(actualTag.getId()).isEqualTo(2L),
@@ -174,35 +174,35 @@ public class TagServiceTest {
 	
 	@Test
 	public void checkChangeShouldThrowServiceExceptionOnFailedChanging() {
-		Mockito.when(tagDAOJPAMock.update(Mockito.any(Tag.class))).thenReturn(Optional.empty());
+		Mockito.when(tagDAOJPAImplMock.update(Mockito.any(Tag.class))).thenReturn(Optional.empty());
 		
 		Tag invalidTag = Tag.builder()
 						    .id(null)
 							.build();
 		
-		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> tagService.change(invalidTag));
+		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> tagServiceImpl.change(invalidTag));
 	}
 	
 	@Test
 	public void checkRemoveShoulDoesntThrowExceptionOnSuccessRemoving() throws ServiceException {		
-		Mockito.when(tagDAOJPAMock.delete(Mockito.any(Tag.class))).thenReturn(true);
+		Mockito.when(tagDAOJPAImplMock.delete(Mockito.any(Tag.class))).thenReturn(true);
 		
 		Tag inputTag = Tag.builder()
 						  .id(2L)
 						  .build();
 		
-		assertDoesNotThrow(() -> tagService.remove(inputTag));
+		assertDoesNotThrow(() -> tagServiceImpl.remove(inputTag));
 	}
 	
 	@Test
 	public void checkRemoveShouldThrowServiceExceptionOnFailedRemoving() {
-		Mockito.when(tagDAOJPAMock.delete(Mockito.any(Tag.class))).thenReturn(false);
+		Mockito.when(tagDAOJPAImplMock.delete(Mockito.any(Tag.class))).thenReturn(false);
 		
 		Tag invalidTag = Tag.builder()
 							.id(null)
 							.build();
 		
-		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> tagService.remove(invalidTag));
+		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> tagServiceImpl.remove(invalidTag));
 	}
 	
 }

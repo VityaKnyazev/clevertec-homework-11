@@ -14,12 +14,11 @@ import org.springframework.context.annotation.ComponentScan;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAOJPA;
 import ru.clevertec.ecl.knyazev.dao.parser.YAMLParser;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 
-@ComponentScan(basePackageClasses = {GiftCertificateDAOJPA.class})
+@ComponentScan(basePackages = "ru.clevertec.ecl.knyazev.dao")
 public class TestAppConfig {
 	private static final String PROPERTY_FILE = "testApplication.yaml";
 	

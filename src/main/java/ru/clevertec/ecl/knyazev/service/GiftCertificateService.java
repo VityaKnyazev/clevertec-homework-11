@@ -1,76 +1,34 @@
 package ru.clevertec.ecl.knyazev.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAOJPA;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
-import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
-@Service
-public class GiftCertificateService implements SimpleService<GiftCertificate> {
-	private GiftCertificateDAOJPA giftCertificateDAOJPA;
-
-	public GiftCertificateService() {
+public interface GiftCertificateService extends SimpleService<GiftCertificate> {
+	
+	/**
+	 * 
+	 * Show gift certificates by tag name. 
+	 * 
+	 * @param String tagName is the name of given tag.
+	 * @return List<GiftCertificate> gift certificates with tag by tag name or empty list.
+	 */
+	public List<GiftCertificate> showByTagName(String tagName);
+	
+	
+	/**
+	 * 
+	 * Show gift certificates by part of given field value on given field name.
+	 * 
+	 * @param String fieldName
+	 * @param String partFieldValue
+	 * @param SortOrder sort order for sorting result. If not present - without sorting.
+	 * @return List<GiftCertificate> gift certificates that contains a part of given field value on 
+	 *         given field name.
+	 */
+	public List<GiftCertificate> showByPartFieldValue(String fieldName, String partFieldValue, SortOrder... sortOrder);
+	
+	public static enum SortOrder {
+		date, name, unordered
 	}
-
-	@Autowired
-	public GiftCertificateService(GiftCertificateDAOJPA giftCertificateDAOJPA) {
-		this.giftCertificateDAOJPA = giftCertificateDAOJPA;
-	}
-
-	@Override
-	public Optional<GiftCertificate> show(Long id) {
-		return giftCertificateDAOJPA.getById(id);
-	}
-
-	@Override
-	public List<GiftCertificate> showAll() {
-		return giftCertificateDAOJPA.getAll();
-	}
-
-	@Override
-	public List<GiftCertificate> showAll(Integer page, Integer pageSize) {
-		return giftCertificateDAOJPA.getAll(page, pageSize);
-	}
-
-	@Override
-	public List<GiftCertificate> showAll(Integer page) {
-		return giftCertificateDAOJPA.getAll(page);
-	}
-
-	@Override
-	public GiftCertificate add(GiftCertificate giftCertificate) throws ServiceException {
-		Optional<GiftCertificate> savedGiftCertificateWrap = giftCertificateDAOJPA.save(giftCertificate);
-
-		if (savedGiftCertificateWrap.isEmpty()) {
-			throw new ServiceException("Error on adding gift certificate");
-		}
-
-		return savedGiftCertificateWrap.get();
-	}
-
-	@Override
-	public GiftCertificate change(GiftCertificate giftCertificate) throws ServiceException {
-		Optional<GiftCertificate> updatedGiftCertificateWrap = giftCertificateDAOJPA.update(giftCertificate);
-
-		if (updatedGiftCertificateWrap.isEmpty()) {
-			throw new ServiceException("Error on updating gift certificate");
-		}
-
-		return updatedGiftCertificateWrap.get();
-	}
-
-	@Override
-	public void remove(GiftCertificate giftCertificate) throws ServiceException {
-		Boolean result = giftCertificateDAOJPA.delete(giftCertificate);
-		
-		if (!result) {
-			throw new ServiceException("Error on deleting gift certificate");
-		}
-	}
-
 }

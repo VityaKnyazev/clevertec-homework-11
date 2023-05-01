@@ -15,18 +15,18 @@ import jakarta.persistence.PersistenceException;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 
 @Repository
-public class TagDAOJPA implements DAO<Tag>{
+public class TagDAOJPAImpl implements TagDAO {
 	private static final Integer PAGE_EL_LIMIT = 20;
 
-	private static final Logger logger = LoggerFactory.getLogger(TagDAOJPA.class);
+	private static final Logger logger = LoggerFactory.getLogger(TagDAOJPAImpl.class);
 	
 	private SessionFactory sessionFactory;
 	
-	TagDAOJPA() {
+	TagDAOJPAImpl() {
 	}
 	
 	@Autowired
-	TagDAOJPA(SessionFactory sessionFactory) {
+	TagDAOJPAImpl(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 

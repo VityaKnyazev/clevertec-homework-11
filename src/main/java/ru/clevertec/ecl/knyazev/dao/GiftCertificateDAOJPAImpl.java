@@ -17,18 +17,18 @@ import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 
 @Repository
-public class GiftCertificateDAOJPA implements DAO<GiftCertificate>, GiftCertificateDAO {
+public class GiftCertificateDAOJPAImpl implements GiftCertificateDAO {
 	private static final Integer PAGE_EL_LIMIT = 20;
 
-	private static final Logger logger = LoggerFactory.getLogger(GiftCertificateDAOJPA.class);
+	private static final Logger logger = LoggerFactory.getLogger(GiftCertificateDAOJPAImpl.class);
 
 	private SessionFactory sessionFactory;
 
-	public GiftCertificateDAOJPA() {
+	public GiftCertificateDAOJPAImpl() {
 	}
 
 	@Autowired
-	public GiftCertificateDAOJPA(SessionFactory sessionFactory) {
+	public GiftCertificateDAOJPAImpl(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
@@ -141,7 +141,7 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate>, GiftCertific
 	}
 
 	@Override
-	public List<GiftCertificate> getByTagPartFieldValue(String fieldName, String partFieldValue) {
+	public List<GiftCertificate> getByPartFieldValue(String fieldName, String partFieldValue) {
 		List<GiftCertificate> giftCertificates = new ArrayList<>();
 
 		if (partFieldValue != null && !partFieldValue.isBlank()) {
@@ -155,14 +155,14 @@ public class GiftCertificateDAOJPA implements DAO<GiftCertificate>, GiftCertific
 			session.getTransaction().begin();
 
 			giftCertificates = session.createQuery(
-					"SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE t." + fieldName + " LIKE ?1",
+					"SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE g." + fieldName + " LIKE ?1",
 					GiftCertificate.class).setParameter(1, partFieldValue).getResultList();
 
 			if (!giftCertificates.isEmpty()) {
 				session.getTransaction().commit();
 			} else {
 				session.getTransaction().rollback();
-				logger.error("No gift certificates were found with given part of tag field value={} on field={}",
+				logger.error("No gift certificates were found with given part of gift certificate field value={} on field={}",
 						partFieldValue, fieldName);
 			}
 		} catch (Exception e) {

@@ -28,15 +28,15 @@ import ru.clevertec.ecl.knyazev.testconfig.TestContainersConfig;
 @ContextHierarchy({ @ContextConfiguration(classes = { TestContainersConfig.class }),
 		@ContextConfiguration(classes = { TestAppConfig.class }) })
 
-public class TagTest {
+public class TagDAOJPAImplTest {
 	@Autowired
-	DAO<Tag> tagDAOJPA;
+	TagDAO tagDAOJPAImpl;
 
 	@Test
 	public void checkGetByIdShouldReturnTag() {
 		Long inputId = 1L;
 
-		Optional<Tag> tagActual = tagDAOJPA.getById(inputId);
+		Optional<Tag> tagActual = tagDAOJPAImpl.getById(inputId);
 
 		Long expectedId = 1L;
 		assertAll(() -> assertThat(tagActual).isNotEmpty(),
@@ -47,14 +47,14 @@ public class TagTest {
 	@NullSource
 	@ValueSource(longs = { 0, -1, 1258 })
 	public void checkGetByIdShouldShouldReturnOptionalEmpty(Long id) {
-		Optional<Tag> tagActual = tagDAOJPA.getById(id);
+		Optional<Tag> tagActual = tagDAOJPAImpl.getById(id);
 
 		assertThat(tagActual).isEmpty();
 	}
 
 	@Test
 	public void checkGetAllShouldReturnTags() {
-		List<Tag> tags = tagDAOJPA.getAll();
+		List<Tag> tags = tagDAOJPAImpl.getAll();
 
 		assertThat(tags).isNotEmpty();
 	}
@@ -64,7 +64,7 @@ public class TagTest {
 
 		Tag expectedTag = Tag.builder().id(1L).name("Любимой жене").build();
 
-		List<Tag> actualTags = tagDAOJPA.getAll(1, 3);
+		List<Tag> actualTags = tagDAOJPAImpl.getAll(1, 3);
 
 		assertAll(() -> assertThat(actualTags).isNotEmpty(),
 				() -> assertThat(actualTags.get(0).getId()).isEqualTo(expectedTag.getId()),
@@ -76,14 +76,14 @@ public class TagTest {
 	public void checkGetAllOnInvalidPageAndElementSizeShouldReturnEmptyList(Integer invalidPage,
 			Integer invalidPageSize) {
 
-		List<Tag> actualTags = tagDAOJPA.getAll(invalidPage, invalidPageSize);
+		List<Tag> actualTags = tagDAOJPAImpl.getAll(invalidPage, invalidPageSize);
 
 		assertThat(actualTags).isEmpty();
 	}
 
 	@Test
 	public void checkGetAllOnPageShouldReturnTags() {
-		List<Tag> actualTags = tagDAOJPA.getAll(1);
+		List<Tag> actualTags = tagDAOJPAImpl.getAll(1);
 
 		assertThat(actualTags).isNotEmpty();
 	}
@@ -92,7 +92,7 @@ public class TagTest {
 	public void checkSaveShouldReturnSavedTag() {
 		Tag savingTag = Tag.builder().name("Школьнику").build();
 
-		Optional<Tag> savedTag = tagDAOJPA.save(savingTag);
+		Optional<Tag> savedTag = tagDAOJPAImpl.save(savingTag);
 
 		assertThat(savedTag).isNotEmpty();
 	}
@@ -100,7 +100,7 @@ public class TagTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidTagsForSaving")
 	public void checkSaveShouldReturnOptionalEmptyOnInvalidTag(Tag invalidTag) {
-		Optional<Tag> savedTag = tagDAOJPA.save(invalidTag);
+		Optional<Tag> savedTag = tagDAOJPAImpl.save(invalidTag);
 
 		assertThat(savedTag).isEmpty();
 	}
@@ -112,7 +112,7 @@ public class TagTest {
 							 .name("Дорогому другу")
 							 .build();
 
-		Optional<Tag> updatedTag = tagDAOJPA.update(updatingTag);
+		Optional<Tag> updatedTag = tagDAOJPAImpl.update(updatingTag);
 
 		assertThat(updatedTag).isNotEmpty();
 	}
@@ -121,7 +121,7 @@ public class TagTest {
 	@MethodSource("getInvalidTagsForUpdating")
 	public void checkUpdateShouldReturnOptionalEmptyOnInvalidTag(Tag invalidTag) {
 		
-		Optional<Tag> updatedTag = tagDAOJPA.update(invalidTag);
+		Optional<Tag> updatedTag = tagDAOJPAImpl.update(invalidTag);
 
 		assertThat(updatedTag).isEmpty();
 	}
@@ -132,7 +132,7 @@ public class TagTest {
 	public void checkDeleteShouldReturnTrue() {
 		Tag deletingTag = Tag.builder().id(4L).build();
 
-		Boolean result = tagDAOJPA.delete(deletingTag);
+		Boolean result = tagDAOJPAImpl.delete(deletingTag);
 
 		assertThat(result).isTrue();
 	}
@@ -140,7 +140,7 @@ public class TagTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidTagsForDeleting")
 	public void checkDeleteShouldReturnFalse(Tag invalidTag) {
-		Boolean result = tagDAOJPA.delete(invalidTag);
+		Boolean result = tagDAOJPAImpl.delete(invalidTag);
 
 		assertThat(result).isFalse();
 	}

@@ -17,17 +17,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAOJPA;
+import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAO;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @ExtendWith(MockitoExtension.class)
-public class GiftCertificateServiceTest {
+public class GiftCertificateServiceImplTest {
 	@Mock
-	private GiftCertificateDAOJPA giftCertificateDAOJPAMock;
+	private GiftCertificateDAO giftCertificateDAOJPAMock;
 	
 	@InjectMocks
-	private GiftCertificateService giftCertificateService;
+	private GiftCertificateServiceImpl giftCertificateServiceImpl;
 	
 	@Test
 	public void checkShowShouldReturnOptionalGiftCertificate() {
@@ -46,7 +46,7 @@ public class GiftCertificateServiceTest {
 		
 		Long inputId = 3L;
 		
-		Optional<GiftCertificate> giftCertificateWrap = giftCertificateService.show(inputId);
+		Optional<GiftCertificate> giftCertificateWrap = giftCertificateServiceImpl.show(inputId);
 		
 		assertAll(
 				() -> assertThat(giftCertificateWrap).isNotEmpty(),
@@ -76,7 +76,7 @@ public class GiftCertificateServiceTest {
 					   .build());
 		});
 				
-		List<GiftCertificate> giftCertificates = giftCertificateService.showAll();
+		List<GiftCertificate> giftCertificates = giftCertificateServiceImpl.showAll();
 		
 		assertAll(
 				() -> assertThat(giftCertificates).isNotEmpty(),
@@ -109,7 +109,7 @@ public class GiftCertificateServiceTest {
 		Integer inputPage = 1;
 		Integer inputPageSize = 2;
 		
-		List<GiftCertificate> actualGiftCertificates = giftCertificateService.showAll(inputPage, inputPageSize);
+		List<GiftCertificate> actualGiftCertificates = giftCertificateServiceImpl.showAll(inputPage, inputPageSize);
 		
 		assertAll(
 				() -> assertThat(actualGiftCertificates).isNotEmpty(),
@@ -141,7 +141,7 @@ public class GiftCertificateServiceTest {
 				
 		Integer inputPage = 1;
 		
-		List<GiftCertificate> actualGiftCertificates = giftCertificateService.showAll(inputPage);
+		List<GiftCertificate> actualGiftCertificates = giftCertificateServiceImpl.showAll(inputPage);
 		
 		assertAll(
 				() -> assertThat(actualGiftCertificates).isNotEmpty(),
@@ -163,7 +163,7 @@ public class GiftCertificateServiceTest {
 		Mockito.when(giftCertificateDAOJPAMock.save(Mockito.any(GiftCertificate.class))).thenReturn(giftCertificateWrap);
 		
 		GiftCertificate inputGiftCertificate = GiftCertificate.builder().name("Таблетки").build();
-		GiftCertificate actualGiftCertificate = giftCertificateService.add(inputGiftCertificate);
+		GiftCertificate actualGiftCertificate = giftCertificateServiceImpl.add(inputGiftCertificate);
 		
 		assertAll(
 				() -> assertThat(actualGiftCertificate.getId()).isEqualTo(1L),
@@ -177,7 +177,7 @@ public class GiftCertificateServiceTest {
 		
 		GiftCertificate invalidGiftCertificate = GiftCertificate.builder().id(1L).build();
 		
-		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> giftCertificateService.add(invalidGiftCertificate));
+		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> giftCertificateServiceImpl.add(invalidGiftCertificate));
 	}
 	
 	@Test
@@ -190,7 +190,7 @@ public class GiftCertificateServiceTest {
 															.name("Таблетки")
 															.build();
 		
-		GiftCertificate actualGiftCertificate = giftCertificateService.change(inputGiftCertificate);
+		GiftCertificate actualGiftCertificate = giftCertificateServiceImpl.change(inputGiftCertificate);
 		
 		assertAll(
 				() -> assertThat(actualGiftCertificate.getId()).isEqualTo(2L),
@@ -206,7 +206,7 @@ public class GiftCertificateServiceTest {
 																.id(null)
 																.build();
 		
-		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> giftCertificateService.change(invalidGiftCertificate));
+		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> giftCertificateServiceImpl.change(invalidGiftCertificate));
 	}
 	
 	@Test
@@ -217,7 +217,7 @@ public class GiftCertificateServiceTest {
 															.id(2L)
 															.build();
 		
-		assertDoesNotThrow(() -> giftCertificateService.remove(inputGiftCertificate));
+		assertDoesNotThrow(() -> giftCertificateServiceImpl.remove(inputGiftCertificate));
 	}
 	
 	@Test
@@ -228,7 +228,7 @@ public class GiftCertificateServiceTest {
 																.id(null)
 																.build();
 		
-		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> giftCertificateService.remove(invalidGiftCertificate));
+		assertThatExceptionOfType(ServiceException.class).isThrownBy(() -> giftCertificateServiceImpl.remove(invalidGiftCertificate));
 	}
 	
 }

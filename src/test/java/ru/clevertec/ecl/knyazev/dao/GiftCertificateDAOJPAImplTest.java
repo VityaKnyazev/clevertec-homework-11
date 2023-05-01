@@ -31,15 +31,15 @@ import ru.clevertec.ecl.knyazev.testconfig.TestContainersConfig;
 @ContextHierarchy({ @ContextConfiguration(classes = { TestContainersConfig.class }),
 		@ContextConfiguration(classes = { TestAppConfig.class }) })
 
-public class GiftCertificateTest {
+public class GiftCertificateDAOJPAImplTest {
 	@Autowired
-	GiftCertificateDAOJPA giftCertificateDAOJPA;
+	GiftCertificateDAO giftCertificateDAOJPAImpl;
 
 	@Test
 	public void checkGetByIdShouldReturnGiftCertificate() {
 		Long inputId = 1L;
 
-		Optional<GiftCertificate> giftCertificateActual = giftCertificateDAOJPA.getById(inputId);
+		Optional<GiftCertificate> giftCertificateActual = giftCertificateDAOJPAImpl.getById(inputId);
 
 		Long expectedId = 1L;
 		assertAll( () -> assertThat(giftCertificateActual).isNotEmpty(),
@@ -51,14 +51,14 @@ public class GiftCertificateTest {
 	@NullSource
 	@ValueSource(longs = {0, -1, 1258})
 	public void checkGetByIdShouldShouldReturnOptionalEmpty(Long id) {
-		Optional<GiftCertificate> giftCertificateActual = giftCertificateDAOJPA.getById(id);
+		Optional<GiftCertificate> giftCertificateActual = giftCertificateDAOJPAImpl.getById(id);
 		
 		assertThat(giftCertificateActual).isEmpty();
 	}
 	
 	@Test
 	public void checkGetAllShouldReturnGiftCertificates() {
-		List<GiftCertificate> giftCertificates = giftCertificateDAOJPA.getAll();
+		List<GiftCertificate> giftCertificates = giftCertificateDAOJPAImpl.getAll();
 		
 		assertThat(giftCertificates).isNotEmpty();
 	}
@@ -74,7 +74,7 @@ public class GiftCertificateTest {
 												  .duration(Date.valueOf("2023-08-20"))
 												  .build();
 												  	
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getAll(1, 3);
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getAll(1, 3);
 		
 		assertAll(
 					() -> assertThat(actualGiftCertificates).isNotEmpty(),
@@ -90,35 +90,35 @@ public class GiftCertificateTest {
 	@MethodSource("getInvalidPageAndElSize")
 	public void checkGetAllOnInvalidPageAndElementSizeShouldReturnEmptyList(Integer invalidPage, Integer invalidPageSize) {
 		
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getAll(invalidPage, invalidPageSize);
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getAll(invalidPage, invalidPageSize);
 		
 		assertThat(actualGiftCertificates).isEmpty();
 	}
 	
 	@Test
 	public void checkGetAllOnPageShouldReturnGiftCertificates() {
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getAll(1);
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getAll(1);
 		
 		assertThat(actualGiftCertificates).isNotEmpty();
 	}
 	
 	@Test
 	public void checkGetByTagNameShouldReturnGiftCertificatesWithTags() {
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagName("Доче");
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getByTagName("Доче");
 		
 		assertThat(actualGiftCertificates).isNotEmpty();
 	}
 	
 	@Test
 	public void checkGetByTagNameShouldReturnEmptyListOnInvalidTagName() {
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagName("Дону");
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getByTagName("Дону");
 		
 		assertThat(actualGiftCertificates).isEmpty();
 	}
 	
 	@Test
-	public void checkGetByTagPartFieldValueShouldReturnGiftCertificatesWithTags() {
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagPartFieldValue("name", "оч");
+	public void checkGetByPartFieldValueShouldReturnGiftCertificatesWithTags() {
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getByPartFieldValue("name", "Ноут");
 		
 		assertThat(actualGiftCertificates).isNotEmpty();
 	}
@@ -126,7 +126,7 @@ public class GiftCertificateTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidFieldsNamesAndValues")
 	public void checkGetByTagPartFieldValueShouldReturnEmptyList(String fieldName, String fieldPartValue) {
-		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPA.getByTagPartFieldValue(fieldName, fieldPartValue);
+		List<GiftCertificate> actualGiftCertificates = giftCertificateDAOJPAImpl.getByPartFieldValue(fieldName, fieldPartValue);
 		
 		assertThat(actualGiftCertificates).isEmpty();
 	}
@@ -140,7 +140,7 @@ public class GiftCertificateTest {
 														 .duration(Date.valueOf("2023-11-01"))
 														 .build();
 		
-		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPA.save(savingGiftCertificate);
+		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPAImpl.save(savingGiftCertificate);
 		
 		assertThat(savedGiftCertificate).isNotEmpty();
 	}
@@ -166,7 +166,7 @@ public class GiftCertificateTest {
 														 }})
 														 .build();
 		
-		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPA.save(savingGiftCertificate);
+		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPAImpl.save(savingGiftCertificate);
 		
 		assertAll(
 					() -> assertThat(savedGiftCertificate).isNotEmpty(),
@@ -198,7 +198,7 @@ public class GiftCertificateTest {
 														 }})
 														 .build();
 		
-		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPA.save(savingGiftCertificate);
+		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPAImpl.save(savingGiftCertificate);
 		
 		assertAll(
 					() -> assertThat(savedGiftCertificate).isNotEmpty(),
@@ -209,7 +209,7 @@ public class GiftCertificateTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidGiftCertificatesForSaving")
 	public void checkSaveShouldReturnOptionalEmptyOnInvalidGiftCertificate(GiftCertificate invalidGiftCertificate) {
-		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPA.save(invalidGiftCertificate);
+		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPAImpl.save(invalidGiftCertificate);
 		
 		assertThat(savedGiftCertificate).isEmpty();
 	}
@@ -239,7 +239,7 @@ public class GiftCertificateTest {
 				 }})
 				 .build();
 		
-		Optional<GiftCertificate> updatedGiftCertificate = giftCertificateDAOJPA.update(updatingGiftCertificate);
+		Optional<GiftCertificate> updatedGiftCertificate = giftCertificateDAOJPAImpl.update(updatingGiftCertificate);
 		
 		assertAll(
 				() -> assertThat(updatedGiftCertificate).isNotEmpty(),
@@ -250,7 +250,7 @@ public class GiftCertificateTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidGiftCertificatesForUpdating")
 	public void checkUpdateShouldReturnOptionalEmptyOnInvalidGiftCertificate(GiftCertificate invalidGiftCertificate) {
-		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPA.update(invalidGiftCertificate);
+		Optional<GiftCertificate> savedGiftCertificate = giftCertificateDAOJPAImpl.update(invalidGiftCertificate);
 		
 		assertThat(savedGiftCertificate).isEmpty();
 	}
@@ -261,7 +261,7 @@ public class GiftCertificateTest {
 				 .id(6L)
 				 .build();
 		
-		Boolean result = giftCertificateDAOJPA.delete(deletingGiftCertificate);
+		Boolean result = giftCertificateDAOJPAImpl.delete(deletingGiftCertificate);
 		
 		assertThat(result).isTrue();
 	}
@@ -269,7 +269,7 @@ public class GiftCertificateTest {
 	@ParameterizedTest
 	@MethodSource("getInvalidGiftCertificateForDeleting")
 	public void checkDeleteShouldReturnFalse(GiftCertificate invalidGiftCertificate) {
-Boolean result = giftCertificateDAOJPA.delete(invalidGiftCertificate);
+Boolean result = giftCertificateDAOJPAImpl.delete(invalidGiftCertificate);
 		
 		assertThat(result).isFalse();
 	}
