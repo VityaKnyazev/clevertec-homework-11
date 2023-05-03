@@ -21,13 +21,13 @@ import jakarta.validation.constraints.Min;
 import ru.clevertec.ecl.knyazev.dto.TagDTO;
 import ru.clevertec.ecl.knyazev.dto.mapper.TagMapper;
 import ru.clevertec.ecl.knyazev.entity.Tag;
-import ru.clevertec.ecl.knyazev.service.SimpleService;
+import ru.clevertec.ecl.knyazev.service.TagService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @RestController
 @Validated
 public class TagController {
-	private SimpleService<Tag> tagService;
+	private TagService tagServiceImpl;
 
 	private TagMapper tagMapperImpl;
 
@@ -35,8 +35,8 @@ public class TagController {
 	}
 
 	@Autowired
-	TagController(SimpleService<Tag> tagService, TagMapper tagMapperImpl) {
-		this.tagService = tagService;
+	TagController(TagService tagServiceImpl, TagMapper tagMapperImpl) {
+		this.tagServiceImpl = tagServiceImpl;
 		this.tagMapperImpl = tagMapperImpl;
 	}
 
@@ -48,12 +48,12 @@ public class TagController {
 
 		if (page != null) {
 			if (pageSize != null) {
-				tags = tagService.showAll(page, pageSize);
+				tags = tagServiceImpl.showAll(page, pageSize);
 			} else {
-				tags = tagService.showAll(page);
+				tags = tagServiceImpl.showAll(page);
 			}
 		} else {
-			tags = tagService.showAll();
+			tags = tagServiceImpl.showAll();
 		}
 
 		if (tags.isEmpty()) {
@@ -66,7 +66,7 @@ public class TagController {
 	@GetMapping("/tags/{id}")
 	public ResponseEntity<?> getTag(
 			@PathVariable @Min(value = 1, message = "Tag id must be greater than or equals to 1") Long id) {
-		Optional<Tag> tagWrap = tagService.show(id);
+		Optional<Tag> tagWrap = tagServiceImpl.show(id);
 
 		if (tagWrap.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nothing found");
@@ -78,7 +78,7 @@ public class TagController {
 	@PostMapping("/tags")
 	public ResponseEntity<?> addTag(@Valid @RequestBody TagDTO tagDTO) {
 		try {
-			Tag savedTag = tagService
+			Tag savedTag = tagServiceImpl
 					.add(tagMapperImpl.toTag(tagDTO));
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(tagMapperImpl.toDTO(savedTag));
@@ -90,7 +90,7 @@ public class TagController {
 	@PutMapping("/tags")
 	public ResponseEntity<?> changeTag(@Valid @RequestBody TagDTO tagDTO) {
 		try {
-			Tag updatedTag = tagService
+			Tag updatedTag = tagServiceImpl
 					.change(tagMapperImpl.toTag(tagDTO));
 			return ResponseEntity.ok().body(tagMapperImpl.toDTO(updatedTag));
 		} catch (ServiceException e) {
@@ -102,7 +102,7 @@ public class TagController {
 	public ResponseEntity<?> removeTag(@Valid @RequestBody TagDTO tagDTO) {
 
 		try {
-			tagService.remove(tagMapperImpl.toTag(tagDTO));
+			tagServiceImpl.remove(tagMapperImpl.toTag(tagDTO));
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Removed successfully");
 		} catch (ServiceException e) {
 			return ResponseEntity.notFound().build();

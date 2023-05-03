@@ -21,13 +21,13 @@ import jakarta.validation.constraints.Min;
 import ru.clevertec.ecl.knyazev.dto.GiftCertificateDTO;
 import ru.clevertec.ecl.knyazev.dto.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
-import ru.clevertec.ecl.knyazev.service.SimpleService;
+import ru.clevertec.ecl.knyazev.service.GiftCertificateService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @RestController
 @Validated
 public class GiftCertificateController {
-	private SimpleService<GiftCertificate> giftCertificateService;
+	private GiftCertificateService giftCertificateServiceImpl;
 
 	private GiftCertificateMapper giftCertificateMapperImpl;
 
@@ -35,9 +35,9 @@ public class GiftCertificateController {
 	}
 
 	@Autowired
-	GiftCertificateController(SimpleService<GiftCertificate> giftCertificateService,
+	GiftCertificateController(GiftCertificateService giftCertificateServiceImpl,
 			GiftCertificateMapper giftCertificateMapperImpl) {
-		this.giftCertificateService = giftCertificateService;
+		this.giftCertificateServiceImpl = giftCertificateServiceImpl;
 		this.giftCertificateMapperImpl = giftCertificateMapperImpl;
 	}
 
@@ -49,12 +49,12 @@ public class GiftCertificateController {
 
 		if (page != null) {
 			if (pageSize != null) {
-				giftCertificates = giftCertificateService.showAll(page, pageSize);
+				giftCertificates = giftCertificateServiceImpl.showAll(page, pageSize);
 			} else {
-				giftCertificates = giftCertificateService.showAll(page);
+				giftCertificates = giftCertificateServiceImpl.showAll(page);
 			}
 		} else {
-			giftCertificates = giftCertificateService.showAll();
+			giftCertificates = giftCertificateServiceImpl.showAll();
 		}
 
 		if (giftCertificates.isEmpty()) {
@@ -67,7 +67,7 @@ public class GiftCertificateController {
 	@GetMapping("/certificates/{id}")
 	public ResponseEntity<?> getGiftCertificate(
 			@PathVariable @Min(value = 1, message = "Gift certificate id must be greater than or equals to 1") Long id) {
-		Optional<GiftCertificate> giftCertificateWrap = giftCertificateService.show(id);
+		Optional<GiftCertificate> giftCertificateWrap = giftCertificateServiceImpl.show(id);
 
 		if (giftCertificateWrap.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nothing found");
@@ -79,7 +79,7 @@ public class GiftCertificateController {
 	@PostMapping("/certificates")
 	public ResponseEntity<?> addGiftCertificate(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
 		try {
-			GiftCertificate savedGiftCertificate = giftCertificateService
+			GiftCertificate savedGiftCertificate = giftCertificateServiceImpl
 					.add(giftCertificateMapperImpl.toGiftCertificate(giftCertificateDTO));
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(giftCertificateMapperImpl.toDTO(savedGiftCertificate));
@@ -91,7 +91,7 @@ public class GiftCertificateController {
 	@PutMapping("/certificates")
 	public ResponseEntity<?> changeGiftCertificate(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
 		try {
-			GiftCertificate updatedGiftCertificate = giftCertificateService
+			GiftCertificate updatedGiftCertificate = giftCertificateServiceImpl
 					.change(giftCertificateMapperImpl.toGiftCertificate(giftCertificateDTO));
 			return ResponseEntity.ok().body(giftCertificateMapperImpl.toDTO(updatedGiftCertificate));
 		} catch (ServiceException e) {
@@ -103,7 +103,7 @@ public class GiftCertificateController {
 	public ResponseEntity<?> removeGiftCertificate(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO) {
 
 		try {
-			giftCertificateService.remove(giftCertificateMapperImpl.toGiftCertificate(giftCertificateDTO));
+			giftCertificateServiceImpl.remove(giftCertificateMapperImpl.toGiftCertificate(giftCertificateDTO));
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Removed successfully");
 		} catch (ServiceException e) {
 			return ResponseEntity.notFound().build();

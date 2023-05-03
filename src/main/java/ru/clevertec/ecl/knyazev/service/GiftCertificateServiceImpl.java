@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import ru.clevertec.ecl.knyazev.dao.GiftCertificateDAO;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
+import ru.clevertec.ecl.knyazev.entity.sort.GiftCertificateSorting;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @Service
@@ -44,12 +45,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 	
 	@Override
 	public List<GiftCertificate> showByTagName(String tagName) {
-		return null;
+		return giftCertificateDAOJPA.getByTagName(tagName);
 	}
 	
 	@Override
-	public List<GiftCertificate> showByPartFieldValue(String fieldName, String partFieldValue, SortOrder... sortOrder) {
-		return null;
+	public List<GiftCertificate> showByPartFieldValue(String fieldName, String partFieldValue, String... sortOrder) {
+		List<GiftCertificate> giftCertificates = giftCertificateDAOJPA.getByPartFieldValue(fieldName, partFieldValue);
+		
+		GiftCertificateSorting giftCertificateSorting = new GiftCertificateSorting();
+		giftCertificates.sort(giftCertificateSorting.getSortingComporator(sortOrder));
+		
+		return giftCertificates;
 	}
 
 	@Override
