@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ru.clevertec.ecl.knyazev.dto.GiftCertificateDTO;
 import ru.clevertec.ecl.knyazev.dto.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
@@ -26,36 +30,23 @@ import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @RestController
 @Validated
+@NoArgsConstructor
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 public class GiftCertificateController {
 	private GiftCertificateService giftCertificateServiceImpl;
 
 	private GiftCertificateMapper giftCertificateMapperImpl;
 
-	GiftCertificateController() {
-	}
-
-	@Autowired
-	GiftCertificateController(GiftCertificateService giftCertificateServiceImpl,
-			GiftCertificateMapper giftCertificateMapperImpl) {
-		this.giftCertificateServiceImpl = giftCertificateServiceImpl;
-		this.giftCertificateMapperImpl = giftCertificateMapperImpl;
-	}
-
 	@GetMapping("/certificates")
 	public ResponseEntity<?> getAll(
-			@RequestParam(required = false, name = "page") @Min(value = 1, message = "Page must be above or equals to 1") Integer page,
-			@RequestParam(required = false, name = "pagesize") @Min(value = 1, message = "Page size must be above or equals to 1") Integer pageSize) {
-		List<GiftCertificate> giftCertificates;
-
-		if (page != null) {
-			if (pageSize != null) {
-				giftCertificates = giftCertificateServiceImpl.showAll(page, pageSize);
-			} else {
-				giftCertificates = giftCertificateServiceImpl.showAll(page);
-			}
-		} else {
-			giftCertificates = giftCertificateServiceImpl.showAll();
-		}
+			@RequestParam(required = false, name = "tag") @Size(min = 3, max = 50, message = "tag name must be above or equals to 3 and less than or equals to 50 symbols") String tagName,
+			@RequestParam(required = false, name = "cp_name") @Size(min = 3, max = 25, message = "gift certificate part of name must be above or equals to 3 and less than or equals to 25 symbols") String giftCertificatePartName,
+			@RequestParam(required = false, name = "cp_description") @Size(min = 3, max = 50, message = "gift certificate part of description must be above or equals to 3 and less than or equals to 50 symbols") String giftCertificatePartDescription,
+			@RequestParam(required = false, name = "page") @Positive(message = "Page must be above or equals to 1") Integer page,
+			@RequestParam(required = false, name = "pagesize") @Positive(message = "Page size must be above or equals to 1") Integer pageSize,
+			@RequestParam(required = false, name = "order") @Pattern(regexp = "^(name|description|date):(ask|desc)$", message = "Order must be like field:order where field can be name or description or date and order can be ask or desc") String[] order) {
+		
+		List<GiftCertificate> giftCertificates = giftCertificateServiceImpl.showAll(tagName, giftCertificatePartName, giftCertificatePartDescription, page, pageSize, order);
 
 		if (giftCertificates.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nothing found");
@@ -66,7 +57,7 @@ public class GiftCertificateController {
 
 	@GetMapping("/certificates/{id}")
 	public ResponseEntity<?> getGiftCertificate(
-			@PathVariable @Min(value = 1, message = "Gift certificate id must be greater than or equals to 1") Long id) {
+			@PathVariable @Positive(message = "Gift certificate id must be greater than or equals to 1") Long id) {
 		Optional<GiftCertificate> giftCertificateWrap = giftCertificateServiceImpl.show(id);
 
 		if (giftCertificateWrap.isEmpty()) {

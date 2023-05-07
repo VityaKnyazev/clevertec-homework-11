@@ -124,6 +124,12 @@ public class GiftCertificateDAOJPAImpl implements GiftCertificateDAO {
 		try (Session session = sessionFactory.openSession()) {
 			session.getTransaction().begin();
 
+			if (tagName == null || "".equals(tagName)) {
+				session.getTransaction().rollback();
+				logger.error("Invalid given param tagName={}", tagName);
+				return giftCertificates;
+			}
+
 			giftCertificates = session
 					.createQuery("SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE t.name = ?1",
 							GiftCertificate.class)
@@ -141,18 +147,63 @@ public class GiftCertificateDAOJPAImpl implements GiftCertificateDAO {
 	}
 
 	@Override
-	public List<GiftCertificate> getByPartFieldValue(String fieldName, String partFieldValue) {
+	public List<GiftCertificate> getByTagName(String tagName, Integer page, Integer elementsOnPage) {
 		List<GiftCertificate> giftCertificates = new ArrayList<>();
 
-		if (partFieldValue != null && !partFieldValue.isBlank()) {
-			partFieldValue = "%" + partFieldValue + "%";
-		} else {
-			return giftCertificates;
+		try (Session session = sessionFactory.openSession()) {
+			session.getTransaction().begin();
+
+			if (tagName == null || tagName.isBlank()) {
+				session.getTransaction().rollback();
+				logger.error("Invalid given param tagName={}", tagName);
+				return giftCertificates;
+			}
+
+			if ((page == null || page < 1) || (elementsOnPage == null || elementsOnPage < 1)) {
+				session.getTransaction().rollback();
+				logger.error("Invalid given param: page={} or elements on page={}", page, elementsOnPage);
+				return giftCertificates;
+			}
+
+			Integer offsset = (page - 1) * elementsOnPage;
+
+			giftCertificates = session
+					.createQuery("SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE t.name = ?1",
+							GiftCertificate.class)
+					.setParameter(1, tagName).setFirstResult(offsset).setMaxResults(elementsOnPage).getResultList();
+
+			if (!giftCertificates.isEmpty()) {
+				session.getTransaction().commit();
+			} else {
+				session.getTransaction().rollback();
+				logger.error("No gift certificates were found with given tag name={}, page={}, and elements on page={}",
+						tagName, page, elementsOnPage);
+			}
 		}
+
+		return giftCertificates;
+	}
+
+	@Override
+	public List<GiftCertificate> getByTagName(String tagName, Integer page) {
+		return getByTagName(tagName, page, PAGE_EL_LIMIT);
+	}
+
+	@Override
+	public List<GiftCertificate> getByPartFieldValue(String fieldName, String partFieldValue) {
+		List<GiftCertificate> giftCertificates = new ArrayList<>();
 
 		Session session = sessionFactory.openSession();
 		try {
 			session.getTransaction().begin();
+			
+			if (partFieldValue != null && !partFieldValue.isBlank()) {
+				partFieldValue = "%" + partFieldValue + "%";
+			} else {
+				session.getTransaction().rollback();
+				logger.error("Invalid partFieldValue={}", partFieldValue);
+				return giftCertificates;
+			}
 
 			giftCertificates = session.createQuery(
 					"SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE g." + fieldName + " LIKE ?1",
@@ -162,7 +213,8 @@ public class GiftCertificateDAOJPAImpl implements GiftCertificateDAO {
 				session.getTransaction().commit();
 			} else {
 				session.getTransaction().rollback();
-				logger.error("No gift certificates were found with given part of gift certificate field value={} on field={}",
+				logger.error(
+						"No gift certificates were found with given part of gift certificate field value={} on field={}",
 						partFieldValue, fieldName);
 			}
 		} catch (Exception e) {
@@ -174,6 +226,59 @@ public class GiftCertificateDAOJPAImpl implements GiftCertificateDAO {
 
 		return giftCertificates;
 	}
+	
+	@Override
+	public List<GiftCertificate> getByPartFieldValue(String fieldName, String partFieldValue, Integer page,
+			Integer elementsOnPage) {
+		List<GiftCertificate> giftCertificates = new ArrayList<>();
+
+		Session session = sessionFactory.openSession();
+		try {
+			session.getTransaction().begin();
+			
+			if (partFieldValue != null && !partFieldValue.isBlank()) {
+				partFieldValue = "%" + partFieldValue + "%";
+			} else {
+				session.getTransaction().rollback();
+				logger.error("Invalid partFieldValue={}", partFieldValue);
+				return giftCertificates;
+			}
+			
+			if ((page == null || page < 1) || (elementsOnPage == null || elementsOnPage < 1)) {
+				session.getTransaction().rollback();
+				logger.error("Invalid given param: page={} or elements on page={}", page, elementsOnPage);
+				return giftCertificates;
+			}
+
+			Integer offsset = (page - 1) * elementsOnPage;
+
+			giftCertificates = session.createQuery(
+					"SELECT g FROM GiftCertificate g JOIN FETCH g.tags t WHERE g." + fieldName + " LIKE ?1",
+					GiftCertificate.class).setParameter(1, partFieldValue).setFirstResult(offsset).setMaxResults(elementsOnPage).getResultList();
+
+			if (!giftCertificates.isEmpty()) {
+				session.getTransaction().commit();
+			} else {
+				session.getTransaction().rollback();
+				logger.error(
+						"No gift certificates were found with given part of gift certificate field value={} on field={}, page={}, elements on page={}",
+						partFieldValue, fieldName, page, elementsOnPage);
+			}
+		} catch (Exception e) {
+			session.getTransaction().rollback();
+			logger.error("Error in field name={}. {}", fieldName, e.getMessage(), e);
+		} finally {
+			session.close();
+		}
+
+		return giftCertificates;
+	}
+	
+	@Override
+	public List<GiftCertificate> getByPartFieldValue(String fieldName, String partFieldValue, Integer page) {
+		return getByPartFieldValue(fieldName, partFieldValue, page, PAGE_EL_LIMIT);
+	}	
+	
 
 	@Override
 	public Optional<GiftCertificate> save(GiftCertificate giftCertificate) {

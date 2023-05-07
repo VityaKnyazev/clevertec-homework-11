@@ -8,8 +8,8 @@ public interface DAO<T> {
 	 * 
 	 * Get Optional<T> entity from database on giving id.
 	 * 
-	 * @param Long id for searching T entity in database.
-	 * @return Optional<T>. If T entity not exists in database - Optional empty.
+	 * @param id for searching T entity in database.
+	 * @return Optional of type T. If T entity not exists in database - Optional empty.
 	 */
 	Optional<T> getById(Long id);
 	
@@ -17,7 +17,7 @@ public interface DAO<T> {
 	 * 
 	 * Get all T entities from database
 	 * 
-	 * @return List<T> all entities from database or empty list.
+	 * @return all T entities from database of type T or empty list.
 	 */
 	List<T> getAll();
 	
@@ -25,9 +25,9 @@ public interface DAO<T> {
 	 * 
 	 * Get all entities from database on given Integer page of given quantity of elements.
 	 * 
-	 * @param Integer page number.
-	 * @param Integer elementsOnPage quantity of elements on page.
-	 * @return List<T> entities on given Integer page of given Integer quantity of elements
+	 * @param page number.
+	 * @param elementsOnPage quantity of elements on page.
+	 * @return list of T entities on given Integer page of given Integer quantity of elements
 	 *         from database or empty list.
 	 */
 	List<T> getAll(Integer page, Integer elementsOnPage);
@@ -36,8 +36,8 @@ public interface DAO<T> {
 	 * 
 	 * Get all entities from database on given Integer page.
 	 * 
-	 * @param Integer page number.
-	 * @return List<T> entities on given Integer page from database or empty list.
+	 * @param page number.
+	 * @return list of T entities on given Integer page from database or empty list.
 	 */
 	List<T> getAll(Integer page);
 		
@@ -47,7 +47,7 @@ public interface DAO<T> {
 	 * Save entity to database
 	 * 
 	 * @param T entity for saving
-	 * @return Optional<T> if was success on saving - optional entity, otherwise - optional empty.
+	 * @return Optional of T. If was success on saving - optional with entity, otherwise - optional empty.
 	 */
 	Optional<T> save(T entity);
 	
@@ -56,13 +56,13 @@ public interface DAO<T> {
 	 * Update entity in database
 	 * 
 	 * @param T entity for updating
-	 * @return Optional<T> if was success on updating - optional entity, otherwise - optional empty
+	 * @return Optional T. If was success on updating - optional with entity, otherwise - optional empty
 	 */
 	Optional<T> update(T entity);
 	
 	/**
 	 * 
-	 * Delete entity in database
+	 * Delete T entity in database
 	 * 
 	 * @param Entity for deleting
 	 * @return Boolean true on success deleting, otherwise - false.

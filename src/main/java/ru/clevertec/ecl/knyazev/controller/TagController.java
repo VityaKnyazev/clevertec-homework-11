@@ -17,33 +17,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ru.clevertec.ecl.knyazev.dto.TagDTO;
 import ru.clevertec.ecl.knyazev.dto.mapper.TagMapper;
 import ru.clevertec.ecl.knyazev.entity.Tag;
-import ru.clevertec.ecl.knyazev.service.TagService;
+import ru.clevertec.ecl.knyazev.service.SimpleService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @RestController
 @Validated
+@NoArgsConstructor
+@AllArgsConstructor(onConstructor_={@Autowired})
 public class TagController {
-	private TagService tagServiceImpl;
+	private SimpleService<Tag> tagServiceImpl;
 
 	private TagMapper tagMapperImpl;
 
-	TagController() {
-	}
-
-	@Autowired
-	TagController(TagService tagServiceImpl, TagMapper tagMapperImpl) {
-		this.tagServiceImpl = tagServiceImpl;
-		this.tagMapperImpl = tagMapperImpl;
-	}
-
 	@GetMapping("/tags")
 	public ResponseEntity<?> getAll(
-			@RequestParam(required = false, name = "page") @Min(value = 1, message = "Page must be above or equals to 1") Integer page,
-			@RequestParam(required = false, name = "pagesize") @Min(value = 1, message = "Page size must be above or equals to 1") Integer pageSize) {
+			@RequestParam(required = false, name = "page") @Positive(message = "Page must be above or equals to 1") Integer page,
+			@RequestParam(required = false, name = "pagesize") @Positive(message = "Page size must be above or equals to 1") Integer pageSize) {
 		List<Tag> tags;
 
 		if (page != null) {
@@ -65,7 +60,7 @@ public class TagController {
 
 	@GetMapping("/tags/{id}")
 	public ResponseEntity<?> getTag(
-			@PathVariable @Min(value = 1, message = "Tag id must be greater than or equals to 1") Long id) {
+			@PathVariable @Positive(message = "Tag id must be greater than or equals to 1") Long id) {
 		Optional<Tag> tagWrap = tagServiceImpl.show(id);
 
 		if (tagWrap.isEmpty()) {

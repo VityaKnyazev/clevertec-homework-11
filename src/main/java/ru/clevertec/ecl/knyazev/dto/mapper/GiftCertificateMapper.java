@@ -6,7 +6,6 @@ import org.hibernate.Hibernate;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 import ru.clevertec.ecl.knyazev.dto.GiftCertificateDTO;
 import ru.clevertec.ecl.knyazev.entity.GiftCertificate;
@@ -15,17 +14,17 @@ import ru.clevertec.ecl.knyazev.entity.Tag;
 @Mapper(componentModel = "spring")
 public interface GiftCertificateMapper {
 
-	@Mappings({ @Mapping(target = "price", numberFormat = "#########.00"),
-			@Mapping(target = "duration", dateFormat = "dd.MM.yyyy"),
-			@Mapping(target = "createDate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"),
-			@Mapping(target = "lastUpdate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"),
-			@Mapping(expression = "java(mapTags(giftCertificate.getTags()))", target = "tags") })
+	@Mapping(target = "price", numberFormat = "#########.00")
+	@Mapping(target = "duration", dateFormat = "dd.MM.yyyy")
+	@Mapping(target = "createDate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+	@Mapping(target = "lastUpdate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+	@Mapping(expression = "java(mapTags(giftCertificate.getTags()))", target = "tags")
 	GiftCertificateDTO toDTO(GiftCertificate giftCertificate);
 
-	@Mappings({ @Mapping(target = "price", numberFormat = "#########.00"),
-			@Mapping(target = "duration", dateFormat = "dd.MM.yyyy"),
-			@Mapping(target = "createDate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"),
-			@Mapping(target = "lastUpdate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS") })
+	@Mapping(target = "price", numberFormat = "#########.00")
+	@Mapping(target = "duration", dateFormat = "dd.MM.yyyy")
+	@Mapping(target = "createDate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+	@Mapping(target = "lastUpdate", dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS")
 	GiftCertificate toGiftCertificate(GiftCertificateDTO giftCertificateDTO);
 
 	List<GiftCertificateDTO> toDTOList(List<GiftCertificate> giftCertificates);

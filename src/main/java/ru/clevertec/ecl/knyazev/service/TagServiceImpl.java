@@ -6,21 +6,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ru.clevertec.ecl.knyazev.dao.DAO;
 import ru.clevertec.ecl.knyazev.entity.Tag;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 @Service
+@NoArgsConstructor
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 public class TagServiceImpl implements SimpleService<Tag> {
 	private DAO<Tag> tagDAOJPA;
-
-	public TagServiceImpl() {
-	}
-
-	@Autowired
-	public TagServiceImpl(DAO<Tag> tagDAOJPA) {
-		this.tagDAOJPA = tagDAOJPA;
-	}
 
 	@Override
 	public Optional<Tag> show(Long id) {
