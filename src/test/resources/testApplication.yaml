@@ -1,0 +1,15 @@
+testcontainers:
+   postgresqlDockerImage: postgres:15.2
+db:
+   driverClassName: org.postgresql.Driver
+   jdbcUrl: jdbc.url
+   username: db.user
+   password: db.password
+   maxPoolSize: 3
+   connectionTimeout: 3000
+   hibernate:
+      schema: none
+      sessionContext: thread
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      showSql: true
+      transactionIsolationValue: 2

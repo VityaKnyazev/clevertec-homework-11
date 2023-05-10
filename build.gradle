@@ -1,21 +1,50 @@
 plugins {
     id 'java-library'
+    
+    id 'org.liquibase.gradle' version '2.2.0'
+    
+    id 'com.diffplug.eclipse.apt' version '3.41.1'
+    
+    id 'war'
 }
 
 ext {
 	javaVersion = '17'
 	
+	postgresqlConVersion = '42.6.0'
+	hikariCPVersion = '5.0.1'
+	
+	hibernateVersion = '6.1.7.Final'
+	hibernateValidatorVersion = '8.0.0.Final'
+	
 	springVersion = '6.0.8'
+	
+	jakartaServletVersion = '6.0.0'
+	
+	snakeYamlVersion = '2.0'
+	
+	jacksonVersion = '2.15.0'
 	
 	mapStructVersion = '1.5.4.Final'
 	
 	lombokVersion = '1.18.26'
+	
+	lombokMapstructBindingVersion = '0.2.0'
+	
+	slf4jApiVersion = '2.0.6'
+	logbackVersion = '1.4.5'
+	
+	liquibaseVersion = '4.21.1'
+	piocliVersion = '4.7.3'
 		
 	jUnitVersion = '5.9.2'
+	assertJVersion = '3.24.2'
+	mockitoVersion = '4.6.1'
+	testcontainersPostgresVersion = '1.17.6'
 }
 
-group = 'ru.clevertec.knyazev'
-version = '1.0'
+group = 'ru.clevertec.ecl.knyazev'
+version = '0.0.1'
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -25,8 +54,68 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation "org.postgresql:postgresql:$postgresqlConVersion"
+	implementation "com.zaxxer:HikariCP:$hikariCPVersion"
+	
+	implementation "org.hibernate.orm:hibernate-core:$hibernateVersion"
+	implementation "org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion"
+	
+	implementation "org.springframework:spring-context:$springVersion"
+	implementation "org.springframework:spring-webmvc:$springVersion"
+			
+	compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletVersion"
+	
+	implementation "org.yaml:snakeyaml:$snakeYamlVersion"
+	
+	implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+	
+	implementation "org.slf4j:slf4j-api:$slf4jApiVersion"
+	implementation "ch.qos.logback:logback-classic:$logbackVersion"	
+
+	liquibaseRuntime "org.liquibase:liquibase-core:$liquibaseVersion"
+	liquibaseRuntime "info.picocli:picocli:$piocliVersion"
+    liquibaseRuntime "org.postgresql:postgresql:$postgresqlConVersion"
+		
+	compileOnly "org.projectlombok:lombok:$lombokVersion"
+	annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+	
+	implementation "org.mapstruct:mapstruct:$mapStructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"	
+    
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:$lombokMapstructBindingVersion"
+		
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$jUnitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$jUnitVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation"org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.springframework:spring-test:$springVersion"
+   
+    
+    testImplementation "org.testcontainers:postgresql:$testcontainersPostgresVersion"
+    testImplementation "org.liquibase:liquibase-core:$liquibaseVersion"
+}
+
+
 java {
     toolchain {
     	languageVersion.set(JavaLanguageVersion.of("$javaVersion"))
     }
+}
+
+liquibase {
+  activities {
+    sales {
+    	  changeLogFile "/src/main/resources/liquibase/db-sales-changelog.xml"
+          driver "org.postgresql.Driver"
+		  url "jdbc:postgresql://localhost:5432/sales?useUnicode=true&characterEncoding=UTF-8"
+		  username "admin"
+          password "admin"
+    }
+  }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }

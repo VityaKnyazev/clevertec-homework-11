@@ -1,4 +1,1 @@
 rootProject.name = 'sales'
-include('entity')
-include('dao')
-include('service')
