@@ -6,7 +6,7 @@ import ru.clevertec.knyazev.entity.Person;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PersonMapper {
 
     PersonDTO toPersonDTO(Person person);

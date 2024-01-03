@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.MimeTypeUtils;
 import ru.clevertec.knyazev.config.AppContextListener;
 import ru.clevertec.knyazev.config.PagingProperties;
@@ -18,6 +19,7 @@ import ru.clevertec.knyazev.pagination.Paging;
 import ru.clevertec.knyazev.pagination.impl.PagingImpl;
 import ru.clevertec.knyazev.service.PersonService;
 import ru.clevertec.knyazev.service.exception.ServiceException;
+import ru.clevertec.knyazev.service.impl.PersonServiceImpl;
 import ru.clevertec.knyazev.util.HttpServletUtil;
 
 import java.io.IOException;
@@ -26,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@WebServlet(urlPatterns = { "/persons", "/persons/*" })
+@WebServlet(urlPatterns = {"/persons", "/persons/*"})
 public class PersonController extends HttpServlet {
     private static final String PAGE_REQUEST_PARAM = "page";
     private static final String PAGE_SIZE_REQUEST_PARAM = "page_size";
@@ -43,13 +45,13 @@ public class PersonController extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        gson = (Gson) config.getServletContext()
-                .getAttribute(AppContextListener.GSON);
-        pagingProperties = (PagingProperties) config.getServletContext()
-                .getAttribute(AppContextListener.PAGING_PROPERTIES);
-        personServiceImpl = (PersonService) config.getServletContext()
-                .getAttribute(AppContextListener.PERSON_SERVICE_IMPL);
+        AnnotationConfigApplicationContext applicationContext = (AnnotationConfigApplicationContext)
+                                                                config.getServletContext()
+                                                                        .getAttribute(AppContextListener.CONTEXT);
 
+        gson = applicationContext.getBean(Gson.class);
+        pagingProperties = applicationContext.getBean(PagingProperties.class);
+        personServiceImpl = applicationContext.getBean(PersonService.class);
     }
 
     @Override
@@ -149,7 +151,7 @@ public class PersonController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-       String personIdParam = HttpServletUtil.getPathParameter(req);
+        String personIdParam = HttpServletUtil.getPathParameter(req);
 
         try {
             UUID personId = UUID.fromString(personIdParam);
@@ -160,7 +162,7 @@ public class PersonController extends HttpServlet {
                     StandardCharsets.UTF_8.name(),
                     MimeTypeUtils.APPLICATION_JSON_VALUE,
                     gson.toJson(EMPTY_JSON));
-        } catch (IllegalArgumentException  | ServiceException | DAOException e) {
+        } catch (IllegalArgumentException | ServiceException | DAOException e) {
             log.error(e.getMessage(), e);
 
             HttpServletUtil.sendResponse(resp,

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import ru.clevertec.knyazev.dao.PersonDAO;
 import ru.clevertec.knyazev.dao.ServiceDAO;
 import ru.clevertec.knyazev.entity.Person;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+@Repository
 @AllArgsConstructor
 public class ServiceDAOImpl implements ServiceDAO {
     private static final String FIND_BY_PERSON_ID = "SELECT id, name, description, price FROM service WHERE person_id = ?";
