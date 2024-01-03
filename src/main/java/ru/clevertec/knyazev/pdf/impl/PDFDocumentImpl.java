@@ -23,7 +23,7 @@ public final class PDFDocumentImpl extends AbstractPDFDocument {
     }
 
     /**
-     * @implSpec
+     * {@inheritDoc}
      */
     @Override
     public Document createDocument() throws PDFDocumentException {

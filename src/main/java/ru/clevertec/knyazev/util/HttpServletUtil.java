@@ -61,8 +61,8 @@ public class HttpServletUtil {
         resp.setStatus(codeStatus);
         resp.setCharacterEncoding(encoding);
         resp.setContentType(contentType);
-        PrintWriter writer = resp.getWriter();
-        writer.append(bodyMessage);
+
+        resp.getWriter().append(bodyMessage);
     }
 
     /**

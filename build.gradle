@@ -91,6 +91,10 @@ java {
     compileTestJava.options.encoding = 'UTF-8'
 }
 
+war {
+    archiveFileName = 'app.war'
+}
+
 liquibase {
     activities {
         government {

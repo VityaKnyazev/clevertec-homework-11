@@ -29,7 +29,7 @@ public class GovernmentServiceImpl implements GovernmentService {
     private PDFManager<List<ServiceDTO>> serviceCheckPDFManagerImpl;
 
     /**
-     * @implSpec
+     * {@inheritDoc}
      */
     @Override
     public String getAbsolutePathByPersonId(UUID personId) {

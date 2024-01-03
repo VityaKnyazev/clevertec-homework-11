@@ -10,3 +10,9 @@ services:
         - POSTGRES_USER=admin
         - POSTGRES_PASSWORD=admin
         - POSTGRES_DB=government
+  web:
+     image: tomcat:10.0.27
+     volumes:
+        -  ./build/libs/app.war:/usr/local/tomcat/webapps/app.war
+     ports:
+        -  "8080:8080"

@@ -42,7 +42,7 @@ public class ServiceCheckPDFManagerImpl extends PDFManager<List<ServiceDTO>> {
     private AbstractPDFDocument pdfDocumentImpl;
 
     /**
-     * @implSpec
+     * {@inheritDoc}
      */
     @Override
     protected Document create() {
@@ -60,7 +60,7 @@ public class ServiceCheckPDFManagerImpl extends PDFManager<List<ServiceDTO>> {
     }
 
     /**
-     * @implSpec
+     * {@inheritDoc}
      */
     @Override
     protected Document add(List<ServiceDTO> objectData, Document document) {
@@ -119,7 +119,7 @@ public class ServiceCheckPDFManagerImpl extends PDFManager<List<ServiceDTO>> {
     }
 
     /**
-     * @implSpec
+     * {@inheritDoc}
      */
     @Override
     protected String saveAndClose(Document document) {

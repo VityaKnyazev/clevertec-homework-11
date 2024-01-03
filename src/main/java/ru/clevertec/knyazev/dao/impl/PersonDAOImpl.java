@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @Repository
 @AllArgsConstructor
+@Slf4j
 public class PersonDAOImpl implements PersonDAO {
     private static final String FIND_BY_ID = "SELECT id, name, surname, email, citizenship, age FROM person WHERE id=?";
     private static final String FIND_ALL = "SELECT id, name, surname, email, citizenship, age FROM person";

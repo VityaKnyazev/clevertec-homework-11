@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @Repository
 @AllArgsConstructor
+@Slf4j
 public class ServiceDAOImpl implements ServiceDAO {
     private static final String FIND_BY_PERSON_ID = "SELECT id, name, description, price FROM service WHERE person_id = ?";
 
