@@ -39,8 +39,8 @@ INSERT INTO person(id, name, surname, email, citizenship, age) VALUES('93dd4c5e-
 INSERT INTO person(id, name, surname, email, citizenship, age) VALUES('66ad6d17-faf4-4a0c-888e-a1a2571b3551', 'Emily', 'Jones', 'emily@gmail.com', 'UK', 30);
 INSERT INTO person(id, name, surname, email, citizenship, age) VALUES('e25de09d-dc5f-4239-b9e1-1b40433dac19', 'Kim', 'Forbes', 'kim@gmail.com', 'South Korea', 28);
 
-INSERT INTO service(person_id, name, description, price) VALUES('f0a7c9a8-0a0a-4f1a-9c0d-9a0f9a0f9a0f', 'Справка о составе семьи', 'Справка о составе семьи выдана по письменному заявлению гражданки', 37.00);
-INSERT INTO service(person_id, name, description, price) VALUES('f0a7c9a8-0a0a-4f1a-9c0d-9a0f9a0f9a0f', 'Справка о количестве детей', 'Справка о количестве детей выдана по ст. 19 Закона о миграции', 174.00);
-INSERT INTO service(person_id, name, description, price) VALUES('f0a7c9a8-0a0a-4f1a-9c0d-9a0f9a0f9a0f', 'Справка о количестве квартир', 'Справка о количестве квартир выдана по письменному заявлению гражданки', 18.50);
-INSERT INTO service(person_id, name, description, price) VALUES('b1b079fb-465c-439f-9c50-1c8a4dbd4b31', 'Справка о составе семьи', 'Справка о составе семьи выдана по запросу гражданина', 18.50);
-INSERT INTO service(person_id, name, description, price) VALUES('b1b079fb-465c-439f-9c50-1c8a4dbd4b31', 'Справка о количестве квартир', 'Справка о количестве квартир выдана по письменному заявлению гражданина', 37.00);
+INSERT INTO service(person_id, name, description, price) VALUES('f0a7c9a8-0a0a-4f1a-9c0d-9a0f9a0f9a0f', 'Справка о составе семьи', 'Выдана по письменному заявлению гражданки', 37.00);
+INSERT INTO service(person_id, name, description, price) VALUES('f0a7c9a8-0a0a-4f1a-9c0d-9a0f9a0f9a0f', 'Справка о количестве детей', 'Выдана по ст. 19 Закона о миграции', 174.00);
+INSERT INTO service(person_id, name, description, price) VALUES('f0a7c9a8-0a0a-4f1a-9c0d-9a0f9a0f9a0f', 'Справка о количестве квартир', 'Выдана по письменному заявлению гражданки', 18.50);
+INSERT INTO service(person_id, name, description, price) VALUES('b1b079fb-465c-439f-9c50-1c8a4dbd4b31', 'Справка о составе семьи', 'Выдана по запросу гражданина', 18.50);
+INSERT INTO service(person_id, name, description, price) VALUES('b1b079fb-465c-439f-9c50-1c8a4dbd4b31', 'Справка о количестве квартир', 'Выдана по письменному заявлению гражданина', 37.00);

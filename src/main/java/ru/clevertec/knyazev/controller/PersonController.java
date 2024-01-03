@@ -27,8 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
 @WebServlet(urlPatterns = {"/persons", "/persons/*"})
+@Slf4j
 public class PersonController extends HttpServlet {
     private static final String PAGE_REQUEST_PARAM = "page";
     private static final String PAGE_SIZE_REQUEST_PARAM = "page_size";

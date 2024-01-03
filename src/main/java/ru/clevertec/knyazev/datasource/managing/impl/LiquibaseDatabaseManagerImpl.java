@@ -14,6 +14,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Represents Liquibase DatabaseManager
+ */
 public class LiquibaseDatabaseManagerImpl implements DatabaseManager {
     private static final String LOAD_DATA_ERROR = "Error when updating database with new tables and data";
 
@@ -37,6 +40,9 @@ public class LiquibaseDatabaseManagerImpl implements DatabaseManager {
         this.changelogFile = changelogFile;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void loadData() {
 
