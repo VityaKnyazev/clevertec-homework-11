@@ -1,7 +1,7 @@
 #datasource config
 datasource:
    driverClassName: org.postgresql.Driver
-   jdbcUrl: jdbc:postgresql://localhost:5432/government?useUnicode=true&characterEncoding=UTF-8
+   jdbcUrl: jdbc:postgresql://db-government:5432/government?useUnicode=true&characterEncoding=UTF-8
    username: admin
    password: admin
    maxPoolSize: 3

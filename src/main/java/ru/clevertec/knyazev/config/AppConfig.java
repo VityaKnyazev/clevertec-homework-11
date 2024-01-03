@@ -6,6 +6,10 @@ import com.zaxxer.hikari.HikariDataSource;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.clevertec.knyazev.cache.AbstractCacheFactory;
 import ru.clevertec.knyazev.cache.Cache;
@@ -22,15 +26,21 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.UUID;
 
-
+@Configuration
+@ComponentScan(basePackages = {"ru.clevertec.knyazev.dao.impl",
+                               "ru.clevertec.knyazev.dao.proxy",
+                               "ru.clevertec.knyazev.mapper",
+                               "ru.clevertec.knyazev.service.impl"})
 public class AppConfig {
 
     private static final String PROPERTY_FILE = "application.yaml";
 
+    @Bean
     YAMLParser yamlParser() {
         return new YAMLParser(PROPERTY_FILE);
     }
 
+    @Bean
     DataSourceProperties dataSourceProperties(YAMLParser yamlParser) {
         return DataSourceProperties.builder()
                 .driverClassName(yamlParser.getProperty("datasource", "driverClassName"))
@@ -38,12 +48,13 @@ public class AppConfig {
                 .username(yamlParser.getProperty("datasource", "username"))
                 .password(yamlParser.getProperty("datasource", "password"))
                 .maxPoolSize(Integer.parseInt(yamlParser.getProperty("datasource",
-                                                                      "maxPoolSize")))
+                        "maxPoolSize")))
                 .connectionTimeout(Long.parseLong(yamlParser.getProperty("datasource",
-                                                                          "connectionTimeout")))
+                        "connectionTimeout")))
                 .build();
     }
 
+    @Bean
     DataSourceManagementProperties dataSourceManagementProperties(YAMLParser yamlParser) {
         return DataSourceManagementProperties.builder()
                 .initOnStartup(Boolean.parseBoolean(yamlParser.getProperty("datasourceManagement",
@@ -51,12 +62,14 @@ public class AppConfig {
                 .build();
     }
 
+    @Bean
     LiquibaseProperties liquibaseProperties(YAMLParser yamlParser) {
         return LiquibaseProperties.builder()
                 .changelogFile(yamlParser.getProperty("liquibase", "changelogFile"))
                 .build();
     }
 
+    @Bean
     PagingProperties pagingProperties(YAMLParser yamlParser) {
         return PagingProperties.builder()
                 .defaultPageSize(Integer.parseInt(yamlParser.getProperty("paging", "defaultPageSize")))
@@ -64,6 +77,7 @@ public class AppConfig {
                 .build();
     }
 
+    @Bean
     CacheProperties cacheProperties(YAMLParser yamlParser) {
         return CacheProperties.builder()
                 .algorithm(yamlParser.getProperty("cache", "algorithm"))
@@ -72,6 +86,7 @@ public class AppConfig {
                 .build();
     }
 
+    @Bean
     PDFProperties pdfProperties(YAMLParser yamlParser) {
         return PDFProperties.builder()
                 .pdfTemplatePath(yamlParser.getProperty("pdf", "templatePath"))
@@ -81,6 +96,7 @@ public class AppConfig {
                 .build();
     }
 
+    @Bean
     PDFProperties serverPDFProperties(YAMLParser yamlParser) {
         return PDFProperties.builder()
                 .pdfTemplatePath(yamlParser.getProperty("pdf", "templatePath"))
@@ -90,21 +106,26 @@ public class AppConfig {
                 .build();
     }
 
+    @Bean
     AbstractCacheFactory defaultCacheFactory(CacheProperties cacheProperties) {
         return new DefaultCacheFactory(cacheProperties.algorithm(), cacheProperties.size());
     }
 
+    @Bean
     Cache<UUID, Person> personCache(AbstractCacheFactory defaultCacheFactory) {
         return defaultCacheFactory.initCache();
     }
 
-    PDFManager<List<ServiceDTO>> serviceCheckPDFManagerImpl(PDFProperties pdfProperties) {
+    @Bean
+    PDFManager<List<ServiceDTO>> serviceCheckPDFManagerImpl(@Qualifier("serverPDFProperties")
+                                                            PDFProperties pdfProperties) {
         return new ServiceCheckPDFManagerImpl(pdfProperties.pdfTemplatePath(),
                 pdfProperties.pdfPath(),
                 pdfProperties.pdfFontPath(),
                 pdfProperties.pdfFontEncoding());
     }
 
+    @Bean
     ValidatorFactory validatorFactory() {
         return Validation.byDefaultProvider()
                 .configure()
@@ -112,6 +133,7 @@ public class AppConfig {
                 .buildValidatorFactory();
     }
 
+    @Bean
     DataSource hikariDataSource(DataSourceProperties dataSourceProperties) {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName(dataSourceProperties.driverClassName());
@@ -124,6 +146,7 @@ public class AppConfig {
         return new HikariDataSource(hikariConfig);
     }
 
+    @Bean
     DatabaseManager liquibaseDatabaseManager(DataSourceProperties dataSourceProperties,
                                              LiquibaseProperties liquibaseProperties) {
         return new LiquibaseDatabaseManagerImpl(dataSourceProperties.driverClassName(),
@@ -133,10 +156,12 @@ public class AppConfig {
                 liquibaseProperties.changelogFile());
     }
 
+    @Bean
     JdbcTemplate jdbcTemplate(DataSource hikariDataSource) {
         return new JdbcTemplate(hikariDataSource);
     }
 
+    @Bean
     Gson gson() {
         return new Gson();
     }

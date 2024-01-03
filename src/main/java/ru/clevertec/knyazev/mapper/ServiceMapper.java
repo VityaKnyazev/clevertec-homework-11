@@ -7,7 +7,7 @@ import ru.clevertec.knyazev.entity.Service;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ServiceMapper {
 
     @Mapping(target = "personId", source = "person.id")

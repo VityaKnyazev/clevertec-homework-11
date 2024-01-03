@@ -9,13 +9,13 @@ import org.springframework.util.MimeTypeUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@WebFilter(urlPatterns = { "/services/*" }, filterName = "AcceptHeaderFilter")
-public class CharsetFilter implements Filter {
+@WebFilter(urlPatterns = { "/services/*" })
+public class AcceptHeaderFilter implements Filter {
 	private static final String ACCEPT_HEADER = "accept";
 	private static final String PDF_TYPE = "application/pdf";
 
 	private static final String ACCEPT_HEADER_ERROR = "{\"error\":\"415 Unsupported Media Type. " +
-			"Accept access header should contains only application/json or application/pdf\"}";
+			"Accept access header should contains only application/pdf\"}";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -23,8 +23,7 @@ public class CharsetFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String headerAccept = httpRequest.getHeader(ACCEPT_HEADER);
 
-		if (headerAccept != null && (headerAccept.contains(PDF_TYPE)
-				|| headerAccept.contains(MimeTypeUtils.APPLICATION_JSON_VALUE))) {
+		if (headerAccept != null && headerAccept.contains(PDF_TYPE)) {
 			chain.doFilter(request, response);
 		} else {
 			HttpServletResponse resp = (HttpServletResponse) response;

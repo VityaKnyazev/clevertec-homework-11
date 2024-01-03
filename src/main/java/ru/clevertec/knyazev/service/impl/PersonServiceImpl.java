@@ -3,6 +3,8 @@ package ru.clevertec.knyazev.service.impl;
 import jakarta.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.clevertec.knyazev.dao.PersonDAO;
 import ru.clevertec.knyazev.dao.proxy.PersonDaoProxy;
 import ru.clevertec.knyazev.data.PersonDTO;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Service
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonServiceImpl implements PersonService {
@@ -29,6 +32,7 @@ public class PersonServiceImpl implements PersonService {
     private PersonMapper personMapperImpl;
     private ValidatorFactory validatorFactory;
 
+    @Autowired
     public PersonServiceImpl(PersonDaoProxy personDaoProxy,
                              PersonMapper personMapperImpl,
                              ValidatorFactory validatorFactory) {

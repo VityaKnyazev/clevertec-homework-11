@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.MimeTypeUtils;
 import ru.clevertec.knyazev.config.AppContextListener;
 import ru.clevertec.knyazev.pdf.exception.PDFDocumentException;
@@ -21,8 +22,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-@Slf4j
 @WebServlet(value = "/services/*")
+@Slf4j
 public class GovernmentController extends HttpServlet {
     private static final String APPLICATION_PDF_MIME_TYPE = "application/pdf";
     private static final String EMPTY_JSON = "{}";
@@ -33,8 +34,11 @@ public class GovernmentController extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        governmentServiceImpl = (GovernmentService) config.getServletContext()
-                .getAttribute(AppContextListener.GOVERNMENT_SERVICE_IMPL);
+        AnnotationConfigApplicationContext applicationContext = (AnnotationConfigApplicationContext)
+                config.getServletContext()
+                        .getAttribute(AppContextListener.CONTEXT);
+
+        governmentServiceImpl = applicationContext.getBean(GovernmentService.class);
     }
 
     @Override
