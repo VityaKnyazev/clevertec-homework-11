@@ -15,7 +15,7 @@ public class AcceptHeaderFilter implements Filter {
 	private static final String PDF_TYPE = "application/pdf";
 
 	private static final String ACCEPT_HEADER_ERROR = "{\"error\":\"415 Unsupported Media Type. " +
-			"Accept access header should contains only application/json or application/pdf\"}";
+			"Accept access header should contains only application/pdf\"}";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -23,8 +23,7 @@ public class AcceptHeaderFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String headerAccept = httpRequest.getHeader(ACCEPT_HEADER);
 
-		if (headerAccept != null && (headerAccept.contains(PDF_TYPE)
-				|| headerAccept.contains(MimeTypeUtils.APPLICATION_JSON_VALUE))) {
+		if (headerAccept != null && headerAccept.contains(PDF_TYPE)) {
 			chain.doFilter(request, response);
 		} else {
 			HttpServletResponse resp = (HttpServletResponse) response;
